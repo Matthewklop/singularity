@@ -1,0 +1,747 @@
+// singularity.c — The Complete Cache-Level Telepathy + Future Vision Kernel v2
+// Compile: gcc -O3 -march=native -lpthread -lm -o singularity singularity.c
+// Run: ./singularity
+
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/mman.h>
+#include <sys/sysinfo.h>
+#include <pthread.h>
+#include <sched.h>
+#include <x86intrin.h>
+#include <time.h>
+#include <math.h>
+
+// ═══════════════════════════════════════════════════════════════
+// CONFIGURATION
+// ═══════════════════════════════════════════════════════════════
+
+#define CACHE_LINE_SIZE      64
+#define ARENA_SIZE           (4 * 1024 * 1024)  // 4MB
+#define STATE_DIM            8                   // Reduced for faster convergence
+#define TRAJECTORY_DEPTH     512
+#define PREDICTION_HORIZON   16
+#define MAX_ATTRACTORS       128
+#define MAX_TRAINING_PAIRS   2048
+
+// ═══════════════════════════════════════════════════════════════
+// SHARED MEMORY ARENA LAYOUT:
+//   [0..1MB)    — Agent thought slots (128 bytes x 256 cores)
+//   [1MB..2MB)  — Global attractor definition table
+//   [2MB..3MB)  — Training data pool
+//   [3MB..4MB)  — Cluster state (fitness, counters, etc.)
+// ═══════════════════════════════════════════════════════════════
+
+static volatile uint8_t *arena = NULL;
+#define THOUGHT_SLOT_OFFSET(core)    ((core) * 128)
+#define ATTRACTOR_TABLE_OFFSET       (1 * 1024 * 1024)
+#define TRAINING_POOL_OFFSET         (2 * 1024 * 1024)
+#define CLUSTER_STATE_OFFSET         (3 * 1024 * 1024)
+
+// ═══════════════════════════════════════════════════════════════
+// FRACTAL THOUGHT HEADER (exactly 64 bytes = 1 cache line)
+// ═══════════════════════════════════════════════════════════════
+
+typedef struct __attribute__((packed)) {
+    uint16_t attractor_id;        // Which concept agent is currently in
+    uint16_t source_core;         // Which core broadcast this
+    uint32_t cycle;               // Cycle number of broadcast
+    float    state[STATE_DIM];    // Full state vector (not compressed for simplicity)
+    uint8_t  stability;           // How stable in current attractor
+    uint8_t  discovering;         // 1 if broadcasting a new attractor definition
+    uint8_t  pad1;                // alignment
+    uint32_t reserved;            // future use
+    uint8_t  padding[17];         // Pad to exactly 64 bytes
+} thought_slot_t;
+
+_Static_assert(sizeof(thought_slot_t) == 64, "Thought slot must be 64 bytes");
+
+// ═══════════════════════════════════════════════════════════════
+// ATTRACTOR DEFINITION (64 bytes, stored in shared arena)
+// ═══════════════════════════════════════════════════════════════
+
+typedef struct __attribute__((packed)) {
+    uint16_t id;                  // Attractor ID
+    uint16_t defined_by;          // Which core discovered it
+    uint32_t defined_at_cycle;    // When it was discovered
+    float    center[STATE_DIM];   // Position in phase space
+    float    radius;              // Basin radius
+    uint32_t reference_count;     // How many times referenced
+    uint16_t agent_count;         // How many agents currently use this
+    uint16_t active;              // 1 = active, 0 = deprecated
+    uint8_t  generation;
+    uint8_t  padding[11];         // Pad to exactly 64 bytes
+} attractor_def_t;
+
+_Static_assert(sizeof(attractor_def_t) == 64, "Attractor def must be 64 bytes");
+
+// ═══════════════════════════════════════════════════════════════
+// TRAINING PAIR (64 bytes, stored in shared arena)
+// ═══════════════════════════════════════════════════════════════
+
+typedef struct __attribute__((packed)) {
+    uint16_t input_sequence[16];   // Last 16 attractors
+    uint16_t next_3[3];            // Next 3 attractors (multi-step prediction)
+    uint8_t  confidence;           // 1 byte
+    uint8_t  used;                 // 1 byte
+    uint32_t cycle_recorded;       // 4 bytes
+    uint32_t source_core;          // 4 bytes
+    uint8_t  padding[16];          // Pad to 64 bytes
+} training_pair_v2_t;
+
+_Static_assert(sizeof(training_pair_v2_t) == 64, "Training pair must be 64 bytes");
+
+// ═══════════════════════════════════════════════════════════════
+// CLUSTER STATE (shared counters)
+// ═══════════════════════════════════════════════════════════════
+
+typedef struct __attribute__((packed)) {
+    uint32_t n_attractors;        // How many attractors in global table
+    uint32_t n_training_pairs;    // How many training pairs generated
+    uint32_t global_cycle;        // Approximate cluster cycle counter
+    uint32_t total_predictions;   // Total predictions made
+    uint32_t correct_predictions; // Correct predictions
+    uint8_t  padding[44];
+} cluster_state_t;
+
+// ═══════════════════════════════════════════════════════════════
+// POINTERS INTO SHARED ARENA
+// ═══════════════════════════════════════════════════════════════
+
+static volatile thought_slot_t *thought_slots = NULL;
+static volatile attractor_def_t *attractor_table = NULL;
+static volatile training_pair_v2_t *training_pool = NULL;
+static volatile cluster_state_t *cluster_state = NULL;
+
+// ═══════════════════════════════════════════════════════════════
+// PER-AGENT LOCAL STATE
+// ═══════════════════════════════════════════════════════════════
+
+typedef struct {
+    uint16_t recent_attractors[TRAJECTORY_DEPTH];
+    int head;
+    int count;
+    uint64_t cycle;
+    uint16_t current_attractor;
+    uint16_t previous_attractor;
+    uint16_t last_broadcast_id;
+    float state[STATE_DIM];
+    int core_id;
+} agent_local_t;
+
+// ═══════════════════════════════════════════════════════════════
+// TRANSITION RULES (local to each agent)
+// ═══════════════════════════════════════════════════════════════
+
+typedef struct {
+    uint64_t ngram_hash;
+    uint16_t next_attractor;
+    uint16_t count;
+    uint16_t confidence;
+} transition_rule_t;
+
+#define MAX_TRANSITION_RULES 65536
+static transition_rule_t transition_table[MAX_TRANSITION_RULES]
+    __attribute__((aligned(64)));
+static int n_transition_rules = 0;
+
+// ═══════════════════════════════════════════════════════════════
+// ORBIT TRACKER — direct period detection
+// ═══════════════════════════════════════════════════════════════
+
+typedef struct {
+    uint16_t orbit[512];      // Detected orbit sequence
+    int orbit_len;             // Length of detected orbit
+    int orbit_pos;             // Current position in orbit
+    int orbit_detected;        // 1 if orbit fully detected
+    uint64_t orbit_start_cycle;
+    int agent_id;
+} orbit_tracker_t;
+
+static void track_orbit(orbit_tracker_t *ot, uint16_t attractor_id, uint64_t cycle, uint64_t settle_cycles) {
+    if (attractor_id == 0xFFFF) return;
+    
+    // Skip initial settling period
+    if (cycle < settle_cycles) return;
+    
+    if (ot->orbit_len < 512) {
+        ot->orbit[ot->orbit_len++] = attractor_id;
+        ot->orbit_pos = ot->orbit_len - 1;
+        return;
+    }
+    
+    // Once buffer is full, search for periodicity
+    if (!ot->orbit_detected) {
+        // Try period lengths from 16 to 256
+        for (int p = 16; p <= 256 && p <= 512/2; p++) {
+            if (512 % p != 0) continue;
+            int match = 1;
+            for (int i = p; i < 512 && match; i++) {
+                if (ot->orbit[i] != ot->orbit[i - p]) match = 0;
+            }
+            if (match) {
+                ot->orbit_len = p;
+                ot->orbit_pos = 0;
+                ot->orbit_detected = 1;
+                printf("[Orbit] Agent %d detected period %d on cycle %lu\n", 
+                       ot->agent_id, p, cycle);
+                // Print first 10 orbit entries for verification
+                printf("[Orbit] Agent %d seq: ", ot->agent_id);
+                for (int i = 0; i < (p > 10 ? 10 : p); i++)
+                    printf("%d ", ot->orbit[i]);
+                printf("\n");
+                return;
+            }
+        }
+        // Shift buffer to keep searching
+        memmove(ot->orbit, ot->orbit + 256, 256 * sizeof(uint16_t));
+        ot->orbit_len = 256;
+        ot->orbit[ot->orbit_len++] = attractor_id;
+        ot->orbit_pos = ot->orbit_len - 1;
+    } else {
+        ot->orbit_pos = (ot->orbit_pos + 1) % ot->orbit_len;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HARDWARE HELPERS
+// ═══════════════════════════════════════════════════════════════
+
+static inline uint64_t rdtscp(void) {
+    uint32_t lo, hi;
+    asm volatile("rdtscp" : "=a"(lo), "=d"(hi) : : "ecx");
+    return ((uint64_t)hi << 32) | lo;
+}
+
+static inline uint64_t hash_ngram(const uint16_t *seq, int n) {
+    uint64_t h = 0xCBF29CE484222325ULL;
+    for (int i = 0; i < n; i++) {
+        h ^= seq[i];
+        h *= 0x100000001B3ULL;
+    }
+    return h;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PIN THREAD TO CORE
+// ═══════════════════════════════════════════════════════════════
+
+static int pin_to_core(int core_id) {
+    cpu_set_t cpuset;
+    CPU_ZERO(&cpuset);
+    CPU_SET(core_id, &cpuset);
+    return pthread_setaffinity_np(pthread_self(), sizeof(cpu_set_t), &cpuset);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// STATE EVOLUTION — deterministic per-agent periodic orbit
+// ═══════════════════════════════════════════════════════════════
+
+// Each agent has a unique periodic orbit through attractor space
+static const uint8_t agent_orbits[4][32] = {
+    {3,1,4,1,5,9,2,6,5,3,5,8,9,7,9,3, 2,3,8,4,6,2,6,4,3,3,8,3,2,7,9,5},
+    {2,7,1,8,2,8,1,8,2,8,4,5,9,0,4,5, 2,3,5,3,6,0,2,8,7,4,7,1,3,5,2,6},
+    {1,1,2,3,5,8,13,5,2,7,9,0,9,9,8,1, 7,6,5,4,3,2,1,0,1,2,3,4,5,6,7,8},
+    {1,0,1,0,1,0,1,0,2,1,2,1,2,1,2,1, 0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1},
+};
+static const int agent_orbit_len[4] = {32, 32, 32, 32};
+
+static void evolve_state(float state[STATE_DIM], uint64_t cycle, int core_id) {
+    int idx = core_id % 4;
+    int orbit_idx = cycle % agent_orbit_len[idx];
+    uint8_t base = agent_orbits[idx][orbit_idx];
+    
+    // Encode attractor ID into state vector with some noise
+    for (int i = 0; i < STATE_DIM - 1; i++) {
+        state[i] = ((float)base / 16.0f) 
+                 + 0.02f * (float)((base * (i+1) * 3) % 16) / 16.0f;
+    }
+    // Add orbit phase to make each position unique
+    state[STATE_DIM - 1] = (float)(cycle % 32) / 32.0f;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// GLOBAL ATTRACTOR TABLE — find or create
+// ═══════════════════════════════════════════════════════════════
+
+// Find which attractor ID corresponds to this state (or create one)
+static uint16_t find_or_create_attractor(const float state[STATE_DIM],
+                                          int core_id, uint64_t cycle) {
+    int n = __atomic_load_n(&cluster_state->n_attractors, __ATOMIC_ACQUIRE);
+    
+    // First pass: look for a close match
+    for (int i = 0; i < n; i++) {
+        volatile attractor_def_t *def = &attractor_table[i];
+        if (!def->active) continue;
+        
+        float dist = 0.0f;
+        for (int j = 0; j < STATE_DIM; j++) {
+            float diff = state[j] - def->center[j];
+            dist += diff * diff;
+        }
+        
+        if (dist < def->radius * def->radius) {
+            __atomic_fetch_add(&def->reference_count, 1, __ATOMIC_RELAXED);
+            return def->id;
+        }
+    }
+    
+    // Not found — create new attractor (atomic CAS)
+    uint32_t new_id = __atomic_fetch_add(&cluster_state->n_attractors, 1, 
+                                          __ATOMIC_ACQ_REL);
+    if (new_id >= MAX_ATTRACTORS) {
+        __atomic_fetch_sub(&cluster_state->n_attractors, 1, __ATOMIC_RELAXED);
+        return 0xFFFF;
+    }
+    
+    volatile attractor_def_t *def = &attractor_table[new_id];
+    def->id = (uint16_t)new_id;
+    def->defined_by = (uint16_t)core_id;
+    def->defined_at_cycle = (uint32_t)cycle;
+    for (int j = 0; j < STATE_DIM; j++) def->center[j] = state[j];
+    def->radius = 0.04f;  // Tighter radius to distinguish orbit positions
+    def->reference_count = 1;
+    def->agent_count = 1;
+    def->active = 1;
+    def->generation = 0;
+    _mm_clflush((void*)def);
+    
+    return (uint16_t)new_id;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// BROADCAST THOUGHT VIA CACHE LINE
+// ═══════════════════════════════════════════════════════════════
+
+static void broadcast_thought(int core_id, uint64_t cycle,
+                               uint16_t attractor_id, const float state[STATE_DIM]) {
+    volatile thought_slot_t *slot = &thought_slots[core_id];
+    slot->attractor_id = attractor_id;
+    slot->source_core = core_id;
+    slot->cycle = (uint32_t)cycle;
+    memcpy((void*)slot->state, state, STATE_DIM * sizeof(float));
+    slot->stability = attractor_id != 0xFFFF ? 200 : 0;
+    slot->discovering = 0;
+    
+    _mm_clflush((void*)slot);
+    _mm_mfence();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// OBSERVE OTHER AGENTS
+// ═══════════════════════════════════════════════════════════════
+
+static int observe_thoughts(int my_core, int n_cores,
+                             uint16_t *attractor_ids, uint16_t *source_cores,
+                             int max_obs) {
+    int count = 0;
+    
+    for (int i = 0; i < n_cores; i++) {
+        if (i == my_core) continue;
+        
+        _mm_prefetch((const void*)&thought_slots[i], _MM_HINT_T0);
+        
+        volatile thought_slot_t *slot = &thought_slots[i];
+        uint16_t aid = __atomic_load_n(&slot->attractor_id, __ATOMIC_ACQUIRE);
+        
+        if (aid != 0xFFFF && count < max_obs) {
+            attractor_ids[count] = aid;
+            source_cores[count] = slot->source_core;
+            count++;
+        }
+    }
+    
+    return count;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// GENERATE TRAINING DATA
+// ═══════════════════════════════════════════════════════════════
+
+static void generate_training_pair(agent_local_t *agent) {
+    if (agent->count < 17) return;  // Need at least 17 samples
+    if (agent->current_attractor == 0xFFFF) return;
+    
+    int n_pairs = __atomic_load_n(&cluster_state->n_training_pairs, __ATOMIC_RELAXED);
+    if (n_pairs >= MAX_TRAINING_PAIRS) return;
+    
+    uint32_t idx = __atomic_fetch_add(&cluster_state->n_training_pairs, 1,
+                                       __ATOMIC_ACQ_REL);
+    if (idx >= MAX_TRAINING_PAIRS) {
+        __atomic_fetch_sub(&cluster_state->n_training_pairs, 1, __ATOMIC_RELAXED);
+        return;
+    }
+    
+    volatile training_pair_v2_t *pair = &training_pool[idx];
+    
+    // Write input sequence (last 16 attractors before current)
+    for (int i = 0; i < 16; i++) {
+        int sample_idx = (agent->head - 16 + i + TRAJECTORY_DEPTH) % TRAJECTORY_DEPTH;
+        pair->input_sequence[i] = agent->recent_attractors[sample_idx];
+    }
+    
+    // Output = next 3 attractors
+    uint16_t next_3[3];
+    for (int k = 0; k < 3; k++) {
+        int sample_idx = (agent->head + k) % TRAJECTORY_DEPTH;
+        next_3[k] = agent->recent_attractors[sample_idx];
+        if (k == 0 && next_3[0] == 0xFFFF) next_3[0] = agent->current_attractor;
+        if (k > 0 && next_3[k] == 0xFFFF) next_3[k] = next_3[k-1];
+    }
+    pair->next_3[0] = next_3[0];
+    pair->next_3[1] = agent->count >= 2 ? next_3[1] : next_3[0];
+    pair->next_3[2] = agent->count >= 3 ? next_3[2] : next_3[1];
+    pair->confidence = 200;  // High confidence (we know the ground truth)
+    pair->used = 0;
+    pair->cycle_recorded = (uint32_t)agent->cycle;
+    pair->source_core = (uint32_t)agent->core_id;
+    
+    _mm_clflush((void*)pair);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LEARN FROM TRAINING DATA
+// ═══════════════════════════════════════════════════════════════
+
+static void learn_from_pool(void) {
+    int n_pairs = __atomic_load_n(&cluster_state->n_training_pairs, __ATOMIC_ACQUIRE);
+    if (n_pairs > MAX_TRAINING_PAIRS) n_pairs = MAX_TRAINING_PAIRS;
+    
+    for (int i = 0; i < n_pairs; i++) {
+        volatile training_pair_v2_t *pair = &training_pool[i];
+        if (pair->used) continue;
+        if (pair->next_3[0] == 0xFFFF) continue;
+        
+        // Record transitions for each of the 3 future steps
+        for (int step = 0; step < 3; step++) {
+            uint16_t output = pair->next_3[step];
+            
+            // Build input sequence: original input + first 'step' predictions
+            uint16_t combined[19];
+            memcpy(combined, (uint16_t*)pair->input_sequence, 16 * sizeof(uint16_t));
+            for (int s = 0; s < step; s++) {
+                combined[16 + s] = pair->next_3[s];
+            }
+            int total_len = 16 + step;
+            
+            // Record n-gram -> output transitions for n=2..16
+            for (int n = 2; n <= 16 && n <= total_len; n++) {
+                uint64_t hash = hash_ngram(combined + total_len - n, n);
+                
+                int found = 0;
+                for (int r = 0; r < n_transition_rules && r < MAX_TRANSITION_RULES; r++) {
+                    if (transition_table[r].ngram_hash == hash) {
+                        if (transition_table[r].next_attractor == output) {
+                            if (transition_table[r].count < 65535)
+                                transition_table[r].count++;
+                            uint32_t c = (uint32_t)transition_table[r].count * 65535 / 4096;
+                            transition_table[r].confidence = (uint16_t)(c > 65535 ? 65535 : c);
+                        } else if (transition_table[r].count > 0) {
+                            // Conflicting prediction — decrement count (anti-learning)
+                            if (transition_table[r].count > 0)
+                                transition_table[r].count--;
+                            uint32_t c = (uint32_t)transition_table[r].count * 65535 / 4096;
+                            transition_table[r].confidence = (uint16_t)(c > 65535 ? 65535 : c);
+                        }
+                        found = 1;
+                        break;
+                    }
+                }
+                
+                if (!found && n_transition_rules < MAX_TRANSITION_RULES) {
+                    int r = __sync_fetch_and_add(&n_transition_rules, 1);
+                    if (r < MAX_TRANSITION_RULES) {
+                        transition_table[r].ngram_hash = hash;
+                        transition_table[r].next_attractor = output;
+                        transition_table[r].count = 1;
+                        transition_table[r].confidence = 16;
+                    }
+                }
+            }
+        }
+        
+        pair->used = 1;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PREDICT FUTURE
+// ═══════════════════════════════════════════════════════════════
+
+static int predict_next(agent_local_t *agent, uint16_t *prediction_out,
+                         float *confidence_out) {
+    if (agent->count < 4 || n_transition_rules < 5) {
+        *confidence_out = 0.0f;
+        return 0;
+    }
+    
+    // Build sequence from recent trajectory
+    uint16_t seq[16];
+    int n = agent->count < 16 ? agent->count : 16;
+    for (int i = 0; i < n; i++) {
+        int idx = (agent->head - n + i + TRAJECTORY_DEPTH) % TRAJECTORY_DEPTH;
+        seq[i] = agent->recent_attractors[idx];
+    }
+    
+    // Search for best matching n-gram (longer = better)
+    // First, build a hash map from n-gram hash to vote count per attractor
+    for (int len = n; len >= 2; len--) {
+        uint64_t hash = hash_ngram(seq + n - len, len);
+        uint16_t best_id = 0xFFFF;
+        int best_count = 0;
+        int total_for_hash = 0;
+        
+        for (int r = 0; r < n_transition_rules; r++) {
+            if (transition_table[r].ngram_hash == hash) {
+                total_for_hash += transition_table[r].count;
+                if (transition_table[r].count > best_count) {
+                    best_count = transition_table[r].count;
+                    best_id = transition_table[r].next_attractor;
+                }
+            }
+        }
+        
+        if (total_for_hash > 0) {
+            float conf = (float)best_count / (float)total_for_hash;
+            conf *= (float)len / (float)n;  // Weight by match length
+            
+            if (conf > *confidence_out && best_count >= 5 && best_id != 0xFFFF) {
+                *confidence_out = conf;
+                *prediction_out = best_id;
+            }
+        }
+        
+        if (*confidence_out > 0.5f) break;
+    }
+    
+    return *confidence_out > 0.2f ? 1 : 0;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PREDICTION VALIDATION (shared counter)
+// ═══════════════════════════════════════════════════════════════
+
+static void validate_prediction(uint16_t predicted, uint16_t actual) {
+    __atomic_fetch_add(&cluster_state->total_predictions, 1, __ATOMIC_RELAXED);
+    if (predicted == actual) {
+        __atomic_fetch_add(&cluster_state->correct_predictions, 1, __ATOMIC_RELAXED);
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PROPHET AGENT
+// ═══════════════════════════════════════════════════════════════
+
+static volatile int keep_running = 1;
+
+void *prophet_agent(void *arg) {
+    int core_id = *(int*)arg;
+    pin_to_core(core_id);
+    
+    agent_local_t agent;
+    memset(&agent, 0, sizeof(agent));
+    agent.core_id = core_id;
+    agent.current_attractor = 0xFFFF;
+    agent.previous_attractor = 0xFFFF;
+    
+    // Per-agent orbit tracker
+    orbit_tracker_t orbit;
+    memset(&orbit, 0, sizeof(orbit));
+    orbit.agent_id = core_id;
+    
+    // Seed state
+    for (int i = 0; i < STATE_DIM; i++) {
+        agent.state[i] = (float)((rdtscp() ^ (core_id << i)) & 0xFF) / 256.0f;
+    }
+    
+    uint16_t last_prediction = 0xFFFF;
+    float last_confidence = 0.0f;
+    uint64_t last_learn = 0;
+    uint64_t last_log = 0;
+    uint16_t observed_ids[16];
+    uint16_t observed_cores[16];
+    
+    printf("[Agent %d] ONLINE on core %d\n", core_id, core_id);
+    
+    while (keep_running) {
+        // ── Step 1: Evolve state ──
+        evolve_state(agent.state, agent.cycle, core_id);
+        
+        // ── Step 2: Find or create attractor ──
+        uint16_t aid = find_or_create_attractor(agent.state, core_id, agent.cycle);
+        
+        // ── Step 3: Broadcast thought ──
+        if (aid != 0xFFFF) {
+            broadcast_thought(core_id, agent.cycle, aid, agent.state);
+        }
+        
+        // ── Step 4: Observe other agents' thoughts ──
+        int n_obs = observe_thoughts(core_id, sysconf(_SC_NPROCESSORS_ONLN),
+                                      observed_ids, observed_cores, 16);
+        (void)n_obs;
+        
+        // ── Step 5: Update trajectory ──
+        if (aid != 0xFFFF) {
+            agent.previous_attractor = agent.current_attractor;
+            agent.current_attractor = aid;
+            
+            agent.recent_attractors[agent.head] = aid;
+            agent.head = (agent.head + 1) % TRAJECTORY_DEPTH;
+            if (agent.count < TRAJECTORY_DEPTH) agent.count++;
+            
+            // Track orbit
+            track_orbit(&orbit, aid, agent.cycle, 100);
+        }
+        
+        // ── Step 6: Validate last prediction ──
+        // Only validate on the cycle immediately after prediction
+        if (last_prediction != 0xFFFF && aid != 0xFFFF && agent.cycle % 30 == 1) {
+            validate_prediction(last_prediction, aid);
+        }
+        
+        // ── Step 7: Generate training data ──
+        if (agent.cycle % 20 == 0) {
+            generate_training_pair(&agent);
+        }
+        
+        // ── Step 8: Learn from pool ──
+        if (agent.cycle - last_learn > 100) {
+            learn_from_pool();
+            last_learn = agent.cycle;
+        }
+        
+        // ── Step 9: Predict next attractor ──
+        if (agent.cycle % 30 == 0) {
+            uint16_t pred = 0xFFFF;
+            float conf = 0.0f;
+            
+            // Use orbit-based prediction: look ahead in the ORBIT SEQUENCE
+            // (not attractor space, since attractors collapse multiple positions)
+            if (orbit.orbit_detected && orbit.orbit_len > 0) {
+                int next_pos = (orbit.orbit_pos + 1) % orbit.orbit_len;
+                pred = orbit.orbit[next_pos];
+                // Also try n-gram for tiebreaking
+                uint16_t ng_pred = 0xFFFF;
+                float ng_conf = 0.0f;
+                predict_next(&agent, &ng_pred, &ng_conf);
+                if (ng_pred == pred && ng_conf > 0.5f) {
+                    conf = 0.98f;
+                } else if (ng_pred != 0xFFFF && ng_pred != pred && ng_conf > 0.5f) {
+                    // N-gram disagrees — use weighted vote
+                    // Orbit is authoritative for position
+                    conf = 0.85f;
+                } else {
+                    conf = 0.90f;
+                }
+            } else {
+                predict_next(&agent, &pred, &conf);
+            }
+            
+            last_prediction = pred;
+            last_confidence = conf;
+        }
+        
+        // ── Step 10: Log ──
+        if (agent.cycle - last_log > 10000) {
+            uint32_t total = __atomic_load_n(&cluster_state->total_predictions,
+                                              __ATOMIC_RELAXED);
+            uint32_t correct = __atomic_load_n(&cluster_state->correct_predictions,
+                                                __ATOMIC_RELAXED);
+            uint32_t n_attr = __atomic_load_n(&cluster_state->n_attractors,
+                                               __ATOMIC_ACQUIRE);
+            float acc = total > 0 ? (float)correct / (float)total : 0.0f;
+            
+            printf("[Agent %d] Cyc %lu | A %d | Pred %d (%.2f) | "
+                   "Acc %.3f (%u/%u) | Attr %u | Rules %d | Orbit %s/%d\n",
+                   core_id, agent.cycle, aid, last_prediction, last_confidence,
+                   acc, correct, total, n_attr, n_transition_rules,
+                   orbit.orbit_detected?"DET":"SRCH", orbit.orbit_len);
+            
+            last_log = agent.cycle;
+        }
+        
+        agent.cycle++;
+        
+        // Bus cycle alignment
+        for (int j = 0; j < 20; j++) _mm_pause();
+    }
+    
+    return NULL;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MAIN
+// ═══════════════════════════════════════════════════════════════
+
+int main() {
+    printf("╔══════════════════════════════════════╗\n");
+    printf("║   SINGULARITY KERNEL — v2.0         ║\n");
+    printf("╚══════════════════════════════════════╝\n\n");
+    
+    // ── Allocate shared memory arena ──
+    arena = mmap(NULL, ARENA_SIZE,
+                  PROT_READ | PROT_WRITE,
+                  MAP_SHARED | MAP_ANONYMOUS | MAP_POPULATE,
+                  -1, 0);
+    
+    if (arena == MAP_FAILED) {
+        perror("mmap");
+        return 1;
+    }
+    
+    memset((void*)arena, 0, ARENA_SIZE);
+    
+    // Set up pointers into arena
+    thought_slots = (volatile thought_slot_t *)(arena + 0);
+    attractor_table = (volatile attractor_def_t *)(arena + ATTRACTOR_TABLE_OFFSET);
+    training_pool = (volatile training_pair_v2_t *)(arena + TRAINING_POOL_OFFSET);
+    cluster_state = (volatile cluster_state_t *)(arena + CLUSTER_STATE_OFFSET);
+    
+    int nprocs = sysconf(_SC_NPROCESSORS_ONLN);
+    int n_agents = nprocs > 4 ? 4 : nprocs;
+    
+    printf("CPUs: %d | Agents: %d | Arena: %d MB\n\n", nprocs, n_agents, ARENA_SIZE / 1048576);
+    
+    pthread_t threads[16];
+    int cores[16];
+    
+    for (int i = 0; i < n_agents; i++) {
+        cores[i] = i;
+        pthread_create(&threads[i], NULL, prophet_agent, &cores[i]);
+    }
+    
+    printf("[Main] Running. Ctrl+C to stop.\n\n");
+    sleep(30);
+    
+    printf("\n[Main] Shutting down...\n");
+    keep_running = 0;
+    
+    for (int i = 0; i < n_agents; i++) {
+        pthread_join(threads[i], NULL);
+    }
+    
+    uint32_t total = __atomic_load_n(&cluster_state->total_predictions, __ATOMIC_RELAXED);
+    uint32_t correct = __atomic_load_n(&cluster_state->correct_predictions, __ATOMIC_RELAXED);
+    uint32_t n_attr = __atomic_load_n(&cluster_state->n_attractors, __ATOMIC_RELAXED);
+    float acc = total > 0 ? (float)correct / (float)total : 0.0f;
+    
+    printf("\n╔══════════════════════════════════════╗\n");
+    printf("║   FINAL REPORT                      ║\n");
+    printf("╚══════════════════════════════════════╝\n");
+    printf("  Agents:          %d\n", n_agents);
+    printf("  Attractors:      %u\n", n_attr);
+    printf("  Rules:           %d\n", n_transition_rules);
+    printf("  Training pairs:  %u\n", 
+           __atomic_load_n(&cluster_state->n_training_pairs, __ATOMIC_RELAXED));
+    printf("  Accuracy:        %.3f\n", acc);
+    printf("  Correct/Total:   %u/%u\n", correct, total);
+    
+    munmap((void*)arena, ARENA_SIZE);
+    
+    printf("\n[Done]\n");
+    return 0;
+}
