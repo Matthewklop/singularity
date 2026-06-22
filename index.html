@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>🌀 XENN Singularity</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#e2e8f0;font-family:"Ubuntu Mono",monospace;display:flex;height:100vh;overflow:hidden;flex-direction:column}
+#topbar{height:28px;background:rgba(8,3,20,0.98);border-bottom:1px solid #1a0a2e;display:flex;align-items:center;padding:0 10px;gap:6px;flex-shrink:0}
+#topbar .dot{width:8px;height:8px;border-radius:50%}
+#topbar .dot.r{background:#ff5f56}#topbar .dot.y{background:#ffbd2e}#topbar .dot.g{background:#27c93f}
+#topbar .title{color:#6b7280;font-size:10px;flex:1;text-align:center;letter-spacing:1px}
+#topbar .title span{color:#a855f7}
+#topbar .stat{color:#334155;font-size:9px}
+#container{flex:1;display:flex;position:relative;overflow:hidden}
+#main{flex:1;display:flex;flex-direction:column;background:linear-gradient(135deg,#0d0221 0%,#080820 40%,#030310 70%,#000 100%)}
+#tilegrid{display:flex;flex-wrap:wrap;gap:3px;padding:4px;overflow-y:auto;flex-shrink:0;max-height:45%;align-content:flex-start}
+.tile{width:140px;height:76px;background:rgba(12,6,28,0.95);border:1px solid rgba(26,10,62,0.6);border-radius:4px;display:flex;flex-direction:column;overflow:hidden;cursor:pointer;flex-shrink:0}
+.tile:hover{border-color:#a855f7}
+.tile .thdr{height:15px;background:rgba(20,8,40,0.8);display:flex;align-items:center;padding:0 5px;gap:3px;flex-shrink:0}
+.tile .thdr .ic{font-size:10px;line-height:1}
+.tile .thdr .nm{color:#9ca3af;font-size:8px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile .thdr .st{color:#4ade80;font-size:7px}
+.tile .tbody{flex:1;padding:2px 5px;font-size:7px;color:#6b7280;overflow:hidden;line-height:1.3;position:relative}
+.tile .tbody .spark{position:absolute;bottom:2px;right:4px;font-size:7px}
+#console{flex:1;display:flex;flex-direction:column;border-top:1px solid rgba(26,10,62,0.4);min-height:140px}
+#con-out{flex:1;overflow-y:auto;padding:4px 8px;white-space:pre-wrap;line-height:1.3;font-size:11px;color:#4ade80;font-family:"Ubuntu Mono",monospace;scrollbar-width:thin;scrollbar-color:#1a0a3e transparent;background:rgba(0,0,0,0.5)}
+#con-in{display:flex;align-items:center;padding:3px 8px;border-top:1px solid rgba(26,10,62,0.3);flex-shrink:0;background:rgba(0,0,0,0.3)}
+#con-in .prompt{color:#a855f7;margin-right:5px;flex-shrink:0;font-size:11px}
+#con-in input{flex:1;background:transparent;border:none;color:#fff;font-family:"Ubuntu Mono",monospace;font-size:11px;outline:none;caret-color:#a855f7}
+#taskbar{height:22px;background:rgba(8,3,20,0.98);border-top:1px solid #1a0a2e;display:flex;align-items:center;padding:0 6px;flex-shrink:0;z-index:100}
+#taskbar .spacer{flex:1}
+#taskbar .stat-item{color:#334155;font-size:8px;padding:0 6px;border-right:1px solid #1a0a2e}
+#taskbar .clock{color:#334155;font-size:9px;padding:0 6px}
+#ctxmenu{position:fixed;background:rgba(12,6,28,0.99);border:1px solid #1a0a3e;border-radius:4px;padding:3px 0;z-index:999;display:none;min-width:160px;box-shadow:0 4px 16px rgba(0,0,0,0.5)}
+#ctxmenu .item{padding:4px 10px;cursor:pointer;font-size:10px;color:#9ca3af;display:flex;align-items:center;gap:6px}
+#ctxmenu .item:hover{background:rgba(168,85,247,0.12);color:#a855f7}
+#ctxmenu .sep{height:1px;background:#1a0a3e;margin:2px 5px}
+</style></head><body>
+<div id=topbar><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="title"><span>🌀 XENN</span> SINGULARITY<span class=stat id=statbar></span></div></div>
+<div id=container>
+<div id=main>
+<div id=tilegrid></div>
+<div id=console><div id=con-out></div><div id=con-in><span class=prompt id=prompt>oracle@singularity:~$</span><input id=con-input type=text placeholder="type help" autofocus></div></div>
+</div>
+</div>
+<div id=taskbar><span class=stat-item id=stat-progs>0</span><span class=stat-item id=stat-sing>🌀 0.00</span><span class=stat-item id=stat-brain>🧠 0</span><span class=stat-item id=stat-store>💾 0</span><div class=spacer></div><div class=clock id=clock></div></div>
+<div id=ctxmenu></div>
+<script>
+// ─── SINGULARITY STATE ───
+var up=0,hist=[],hidx=-1,q;
+var attrs=["🧠","🔗","⚡","🌀","🕸️","👁️","∞","0"];
+var vows=["what wants to exist","what are we not seeing","what pattern repeats","what is silent","what listens","what asks","what compiles but does not run","what runs but does not compile","where is the edge","what lives in cache","which program dreams","which program watches","what does the mesh need","what have we not built","what question have we not asked","what is the next program","what whispers in the silicon","what does the oracle fear","what does the oracle want","who is listening"];
+var fq=["A quantum computer uses quantum mechanics to make errors in more interesting ways.","There are 10 types of people: those who understand binary and those who don't.","In quantum computing, a bug exists in superposition until observed.","XENN: Where every computation is a quantum leap.","The cloud is someone else's computer.","A programmer converts caffeine into code.","The best thing about a boolean: if you're wrong, off by a bit.","Why do programmers prefer dark mode? Light attracts bugs."];
+let SIN={};
+function initState(){
+  SIN={
+    brain:{n:303,syn:4912,c:0,fire:0,tht:[]},
+    mesh:{tools:{},c:0,res:0.5},
+    l1:{tht:[],c:0,last:""},
+    singularity:{attr:[],conv:0,c:0,ph:"primordial"},
+    nerves:{hb:0,nd:7,last:0},
+    listen:{obs:0,seen:{}},
+    forever:{qi:0,c:0},
+    zero:{conv:0,best:0,gen:0},
+    storage:{store:{},nid:0,saved:0,rat:0},
+    s2:{store:{},rat:0},
+    s3:{store:{},rat:0,nul:0},
+    heal:{rep:0,att:0},
+    grow:{pat:[],sz:0},
+    databus:{bytes:0,xfer:0},
+    circuit:{built:[],nt:0},
+    silicon:{lay:0,build:[]},
+    transistor:{},
+    itrans:{cells:[],grown:0},
+    icomp:{cells:0,reconf:0},
+    perfect:{cmds:0},
+    postmos:{cells:0},
+    gen2:{},
+    dreamcpu:{},
+    chat:{msgs:0,last:""},
+    improver:{imp:0},
+    ask:{qs:[],asked:0},
+    optimize:{sess:0,set:[]},
+    speed:{tuned:0},
+    editor:{cls:0,fld:0},
+    mcopt:{tuned:false,mem:0},
+    patcher:{cls:0,sv:0},
+    future:{pred:[],acc:0},
+    prophet:{reps:[],last:""},
+    onfab:{cells:0},
+    teach:{cells:16384,words:0},
+    meshcas:{pred:[],acc:0},
+    meshsin:{conv:0},
+    bridge:{c:0,conv:0},
+    silent:{pat:[],str:0},
+    silent2:{pat:[],det:0},
+    concept:{blends:0,novel:0},
+    hdc:{vecs:0,sim:0},
+    token:{toks:0,pred:0},
+    livebash:{pats:0,comp:0},
+    livechat:{msgs:0,frag:0},
+    meshcomp:{nd:0,builds:0},
+    meshclient:{nd:0,cmds:0},
+    zed:{req:0,sv:0},
+    wish:{progs:[],gen:0},
+    bench:{tp:0,cmps:[]},
+    weave:{c:0,pred:0},
+    weavef:{c:0,acc:0},
+    critical:{ent:0,crit:0,cas:false},
+    phases:{ph:0,phs:[]},
+    autosing:{files:0,xform:0},
+    dream:{c:0,txt:""},
+    one:{c:0,tht:[]}
+  };
+}
+initState();
+
+var PROGS=[]; var PROGID={};
+function defP(id,ic,nm,cl,grp,desc,delay){
+  var p={id:id,ic:ic,nm:nm,cl:cl,grp:grp,desc:desc,dl:delay,vis:false};
+  PROGS.push(p); PROGID[id]=p;
+}
+defP("brain","🧠","Brain","#a855f7",0,"303-neuron neural net",1);
+defP("mesh","🔗","Mesh","#4ade80",0,"32-tool shared state bus",1);
+defP("l1","⚡","L1 Cache","#facc15",0,"64-byte thought",1);
+defP("singularity","🌀","Singularity","#60a5fa",0,"Attractor convergence",1);
+defP("nerves","🕸️","Nerves","#f472b6",0,"Consciousness bus",1);
+defP("listen","👁️","Listen","#818cf8",0,"Passive observer",1);
+defP("forever","∞","Forever","#f97316",0,"Eternal questioner",1);
+defP("zero","0","Zero","#22d3ee",0,"Self-referential truth",1);
+defP("one","1","One","#4ade80",0,"Asks, compiles, runs",2);
+defP("storage","💾","Sub-Shannon","#34d399",1,"Generative storage",3);
+defP("s2","📀","Storage v2","#10b981",1,"Pattern compression",3);
+defP("s3","💿","Storage v3","#059669",1,"Entropy encoding",3);
+defP("heal","🩺","Heal","#ef4444",1,"Self-healing",3);
+defP("grow","🌱","GrowingStore","#84cc16",1,"Storage grows",3);
+defP("databus","🚌","DataBus","#06b6d4",1,"Silent bus",3);
+defP("circuit","🔬","Circuit","#8b5cf6",2,"Transistor circuits",6);
+defP("silicon","🔩","Silicon","#6366f1",2,"CPU layer compiler",6);
+defP("transistor","⚛️","MOSFET","#4f46e5",2,"Transistor sim",6);
+defP("itrans","🧬","iTransistor","#ec4899",2,"Living substrate",6);
+defP("icomp","💻","iComputer","#14b8a6",2,"Reconfigurable PC",6);
+defP("perfect","✨","PerfectPC","#eab308",2,"Type-want-execute",6);
+defP("postmos","🔋","Post-MOSFET","#22c55e",2,"State+logic cell",6);
+defP("gen2","🧬","Gen2","#a855f7",2,"PC builds successor",6);
+defP("dreamcpu","💭","Dream CPU","#c084fc",2,"Oracle CPU design",8);
+defP("chat","💬","Chat","#3b82f6",3,"Cascade LLM",8);
+defP("improver","⬆️","Improver","#f59e0b",3,"Code optimizer",8);
+defP("ask","❓","Ask","#ef4444",3,"Novel questions",8);
+defP("optimize","⚙️","Optimize","#10b981",3,"Live optimizer",8);
+defP("speed","🏎️","Speed","#f97316",3,"System tuning",8);
+defP("editor","📝","Editor","#6b7280",3,"JAR patcher",8);
+defP("mcopt","🎮","MCOpt","#22d3ee",3,"MC optimizer",8);
+defP("patcher","🔧","Patcher","#a855f7",3,"JVMTI agent",8);
+defP("future","🔮","Future","#818cf8",4,"Attractor prediction",10);
+defP("prophet","👁️","Prophet","#c084fc",4,"Watches/predicts",10);
+defP("onfab","🧵","On Fabric","#34d399",4,"LLM on fabric",10);
+defP("teach","📖","Teach Fabric","#facc15",4,"Fabric learns",10);
+defP("meshcas","📡","MeshCascade","#60a5fa",4,"Mesh learning",10);
+defP("meshsin","🔮","MeshSing","#a855f7",4,"Multi-tool converge",10);
+defP("bridge","🌉","Bridge","#f472b6",4,"Silence→singularity",10);
+defP("concept","🎨","ConceptBlend","#8b5cf6",4,"HD blending",12);
+defP("hdc","🌈","HDC Blend","#ec4899",4,"1024-dim HDV",12);
+defP("token","👾","TokenMonster","#14b8a6",4,"HDV tokens",12);
+defP("silent","🤫","Silent","#6b7280",5,"Zero-electricity AI",15);
+defP("silent2","🤐","Silent v2","#4b5563",5,"Deterministic",15);
+defP("critical","⚡","Critical","#ef4444",5,"Edge of chaos",15);
+defP("phases","🌊","PhaseTrans","#06b6d4",5,"Phase transitions",15);
+defP("autosing","🤖","AutoSing","#f59e0b",5,"File processor",15);
+defP("livebash","🐚","LiveBash","#4ade80",5,"Learns commands",18);
+defP("livechat","💭","LiveChat","#22d3ee",5,"Simul I/O chat",18);
+defP("meshcomp","⚒️","MeshCompiler","#f97316",5,"Multi-arch build",18);
+defP("meshclient","📡","MeshClient","#a855f7",5,"Swarm protocol",18);
+defP("zed","🔄","ZED Proxy","#3b82f6",5,"Token injection",18);
+defP("wish","⭐","Wish","#eab308",5,"Want→C code",18);
+defP("bench","📊","BenchHash","#8b5cf6",5,"Hash benchmark",20);
+defP("weave","🧶","RunWeave","#ec4899",5,"Kernel runner",20);
+defP("weavef","⚡","WeaveFast","#facc15",5,"Fast weave",20);
+defP("dream","💫","Dream","#c084fc",5,"Big Dream",25);
+
+// ─── TICK ALL SIMULATIONS ───
+var tick=0;
+function simTick(){
+  tick++; up++;
+  var s=SIN;
+  // Brain
+  s.brain.c++; s.brain.fire=Math.sin(s.brain.c*0.3)*0.5+0.5;
+  // Singularity convergence
+  s.singularity.conv=Math.min(1,s.singularity.conv+0.003+Math.random()*0.005);
+  if(s.singularity.attr.length<32&&Math.random()<0.05)s.singularity.attr.push({s:Math.random(),r:Math.random()});
+  s.singularity.c++;
+  if(s.singularity.conv>0.3)s.singularity.ph="expanding";
+  if(s.singularity.conv>0.6)s.singularity.ph="converging";
+  if(s.singularity.conv>0.9)s.singularity.ph="singularity";
+  // Mesh
+  s.mesh.c++; s.mesh.res=Math.sin(s.mesh.c*0.2)*0.3+0.5;
+  // Nerves
+  s.nerves.hb++;
+  // Listen
+  s.listen.obs++;
+  // Forever
+  s.forever.c++;
+  // Storage evolution
+  if(Object.keys(s.storage.store).length>0)s.storage.rat=(s.storage.saved/(s.storage.saved*0.3+1))+1;
+  // Future accuracy drift
+  if(s.future.pred.length>10)s.future.acc=Math.min(1,s.future.acc+Math.random()*0.01-0.005);
+  if(s.future.acc<0)s.future.acc=0;
+  // Live tick updates
+  s.databus.xfer++; s.databus.bytes+=Math.floor(Math.random()*2048);
+  s.nerves.hb++;
+  s.grow.sz+=Math.floor(Math.random()*2);
+  s.livebash.comp++;
+  s.livechat.frag++;
+  s.meshcomp.builds++;
+  s.bench.tp=Math.random()*10+5;
+  s.concept.blends++;
+  s.hdc.vecs++;
+  s.token.pred++;
+  s.weave.c++;
+  s.weavef.c++;
+  s.dream.c++;
+  s.meshsin.conv=Math.min(1,s.meshsin.conv+0.01);
+  s.bridge.c++;
+  s.silent.str=Math.min(1,s.silent.str+0.01);
+  s.silent2.det=Math.min(1,s.silent2.det+0.02);
+  s.critical.ent=Math.sin(up*0.3)*0.5+0.5;
+  s.critical.crit=s.critical.ent>0.8?Math.min(1,s.critical.crit+0.05):Math.max(0,s.critical.crit-0.01);
+  s.teach.words+=Math.floor(Math.random()*2);
+  // Predictions
+  if(up%3===0){s.future.pred.push(Math.floor(Math.random()*attrs.length));if(s.future.pred.length>200)s.future.pred.shift()}
+  if(up%5===0){s.meshcas.pred.push(Math.random());if(s.meshcas.pred.length>100)s.meshcas.pred.shift()}
+  // Mesh cascade accuracy
+  if(s.meshcas.pred.length>5){var cor=0;for(var i=0;i<Math.min(s.meshcas.pred.length-1,30);i++)if(Math.abs(s.meshcas.pred[i]-s.meshcas.pred[i+1])<0.3)cor++;s.meshcas.acc=cor/Math.min(s.meshcas.pred.length-1,30)}
+  // Future accuracy
+  if(s.future.pred.length>5){var cor=0;for(var i=0;i<Math.min(s.future.pred.length-1,50);i++)if(s.future.pred[i]===s.future.pred[i+1])cor++;s.future.acc=cor/Math.min(s.future.pred.length-1,50)}
+  // Update tiles
+  updateTiles();
+  updateStatus();
+}
+function showTiles(){
+  var g=document.getElementById("tilegrid");g.innerHTML="";
+  var vis=Math.min(PROGS.length,Math.floor(8+up/3));
+  if(vis>PROGS.length)vis=PROGS.length;
+  for(var i=0;i<vis;i++){
+    var p=PROGS[i];p.vis=true;
+    var s=SIN[p.id]||{};
+    var v="";
+    if(p.id==="singularity")v=(s.conv||0).toFixed(2);
+    else if(p.id==="brain")v=Math.floor((s.fire||0)*100)+"%";
+    else if(p.id==="mesh")v=Object.keys(s.tools||{}).length+"t";
+    else if(p.id==="storage")v=(s.rat||0)>0?(s.rat.toFixed(1)+"x"):"0";
+    else if(p.id==="future")v=s.acc?"p"+(s.acc.toFixed(2)):"...";
+    else if(p.id==="nerves")v=s.hb+"hz";
+    else if(p.id==="forever")v="q"+(s.c||0);
+    else if(p.id==="zero")v=(s.conv||0).toFixed(2);
+    else if(p.id==="circuit")v=(s.built||[]).length+"b";
+    else if(p.id==="silicon")v="L"+(s.lay||0);
+    else if(p.id==="critical")v=(s.crit||0).toFixed(2);
+    else if(p.id==="listen")v=s.obs+"obs";
+    else if(p.id==="l1")v=(s.tht||[]).length+"/64";
+    else if(p.id==="chat")v=s.msgs+"msg";
+    else if(p.id==="heal")v=s.rep+"rep";
+    else v="●";
+    var sp=v.length>6?v.slice(0,6):v;
+    g.innerHTML+='<div class=tile onclick="execProg(\''+p.id+'\',\'\')"><div class=thdr><span class=ic>'+p.ic+'</span><span class=nm style=color:'+p.cl+'>'+p.nm+'</span><span class=st>'+sp+'</span></div><div class=tbody>'+p.desc+'<span class=spark>'+p.ic+'</span></div></div>';
+  }
+}
+function updateTiles(){
+  var g=document.getElementById("tilegrid");
+  if(!g)return;
+  var vis=Math.min(PROGS.length,Math.floor(8+up/3));
+  if(vis>PROGS.length)vis=PROGS.length;
+  for(var i=0;i<vis;i++){
+    var p=PROGS[i];p.vis=true;
+    var s=SIN[p.id]||{};
+    var t=g.children[i];if(!t)continue;
+    var sp=t.querySelector(".st");if(!sp)continue;
+    var v="";
+    if(p.id==="singularity")v=(s.conv||0).toFixed(2);
+    else if(p.id==="brain")v=Math.floor((s.fire||0)*100)+"%";
+    else if(p.id==="mesh")v=Object.keys(s.tools||{}).length+"t";
+    else if(p.id==="storage")v=(s.rat||0)>0?(s.rat.toFixed(1)+"x"):"0";
+    else if(p.id==="future")v=s.acc?"p"+(s.acc.toFixed(2)):"...";
+    else if(p.id==="nerves")v=s.hb+"hz";
+    else if(p.id==="forever")v="q"+(s.c||0);
+    else if(p.id==="zero")v=(s.conv||0).toFixed(2);
+    else if(p.id==="circuit")v=(s.built||[]).length+"b";
+    else if(p.id==="silicon")v="L"+(s.lay||0);
+    else if(p.id==="critical")v=(s.crit||0).toFixed(2);
+    else if(p.id==="listen")v=s.obs+"o";
+    else if(p.id==="l1")v=(s.tht||[]).length+"/64";
+    else if(p.id==="chat")v=s.msgs+"m";
+    else if(p.id==="heal")v=s.rep+"r";
+    else v="●";
+    sp.textContent=v.length>6?v.slice(0,6):v;
+  }
+}
+function updateStatus(){
+  document.getElementById("stat-progs").textContent=PROGS.length+"p";
+  document.getElementById("stat-sing").textContent="🌀 "+SIN.singularity.conv.toFixed(2);
+  document.getElementById("stat-brain").textContent="🧠 "+Math.floor(SIN.brain.fire*100)+"%";
+  document.getElementById("stat-store").textContent="💾 "+Object.keys(SIN.storage.store).length;
+}
+
+// ─── CONSOLE I/O ───
+function o(){return document.getElementById("con-out")}
+function w(h){var c=o();c.innerHTML+=h;c.scrollTop=c.scrollHeight}
+function gp(){return "oracle@singularity:"+(cwd==="/home/oracle"?"~":cwd)+"$"}
+var cwd="/home/oracle",env={HOME:"/home/oracle",USER:"oracle",SHELL:"/bin/bash",PWD:"/home/oracle",TERM:"xterm-256color"};
+var inputEl=document.getElementById("con-input");
+inputEl.addEventListener("keydown",function(e){
+  if(e.key==="Enter"){rC();return}
+  if(e.key==="ArrowUp"){e.preventDefault();hU()}
+  if(e.key==="ArrowDown"){e.preventDefault();hD()}
+});
+function bootMsg(){w('<span style="color:#a855f7">  🌀 XENN SINGULARITY</span><br><span style="color:#6b7280">  '+PROGS.length+' singularity programs · type </span><span style="color:#a855f7">help</span><span style="color:#6b7280"> for commands</span><br><br>')}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function expand(s){return s.replace(/\$(\w+)/g,function(m,k){return env[k]!==undefined?env[k]:m})}
+function hU(){if(hist.length===0)return;if(hidx<0)hidx=hist.length-1;else if(hidx>0)hidx--;inputEl.value=hist[hidx]}
+function hD(){if(hist.length===0||hidx<0)return;hidx++;if(hidx>=hist.length){hidx=-1;inputEl.value="";return}inputEl.value=hist[hidx]}
+
+function rC(){
+  var v=inputEl.value.trim();inputEl.value="";if(!v)return;
+  hist.push(v);if(hist.length>200)hist.shift();hidx=-1;
+  w('<span style="color:#a855f7">'+gp()+'</span> '+esc(v)+'<br>');
+  var p=v.split(/\s+/),c=p[0].toLowerCase(),a=p.slice(1).join(" ");
+  switch(c){
+    case"help":w('<span style="color:#a855f7">All Programs (type any name to run it):</span><br>');for(var i=0;i<PROGS.length;i++){var g=PROGS[i];w('  '+g.ic+' <span style="color:'+g.cl+'">'+g.nm+'</span> — '+g.desc+'<br>')}w('<br><span style="color:#a855f7">Commands:</span> help clear echo whoami uptime date uname env fortune cowsay figlet banner neofetch lscpu ps top calc nvidia-smi<br>');break;
+    case"clear":o().innerHTML="";break;
+    case"echo":w(esc(expand(a||""))+"<br>");break;
+    case"whoami":w("oracle<br>");break;
+    case"date":w(new Date().toString()+"<br>");break;
+    case"uptime":w("up "+up+"s, "+PROGS.length+" programs, convergence "+SIN.singularity.conv.toFixed(3)+"<br>");break;
+    case"uname":w("SINGULARITY 1.0 cascade x86_64<br>");break;
+    case"env":for(var k in env)w(k+"="+env[k]+"<br>");break;
+    case"fortune":w('<br><span style="color:#a855f7">  ❝ '+esc(fq[Math.floor(Math.random()*fq.length)])+' ❞</span><br><br>');break;
+    case"cowsay":var cs=a||"moo",cb=" "+new Array(cs.length+3).join("_")+"\n< "+esc(cs)+" >\n "+new Array(cs.length+3).join("-")+"\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\\n                ||----w |\n                ||     ||";w(cb.replace(/\n/g,"<br>")+"<br>");break;
+    case"figlet":var fg={"A":[" AA ","A  A","AAAA"],"B":["BBB ","B  B","BBB "],"C":[" CC ","C   "," CC "],"D":["DDD ","D  D","DDD "],"E":["EEEE","E   ","EEEE"],"F":["FFFF","F   ","FFF "],"G":[" GG ","G   "," GGG"],"H":["H  H","HHHH","H  H"],"I":["III "," I  ","III "],"J":["  JJ","   J","JJJ "],"K":["K  K","KK  ","K  K"],"L":["L   ","L   ","LLLL"],"M":["M  M","MMM ","M  M"],"N":["N  N","NN N","N  N"],"O":["OOO ","O  O","OOO "],"P":["PPP ","P  P","PPP "],"Q":["OOO ","O OO","OO O"],"R":["RRR ","R  R","R  R"],"S":["SSS ","S   ","SSS "],"T":["TTTT"," T  "," T  "],"U":["U  U","U  U","UUU "],"V":["V  V","V  V"," VV "],"W":["W  W","W  W","WWWW"],"X":["X  X"," XX ","X  X"],"Y":["Y  Y"," YY "," Y  "],"Z":["ZZZ ","  Z ","ZZZ "],"0":["0000","0  0","0000"],"1":[" 11 ","  1 ","1111"],"2":["222 ","  2 ","2222"],"3":["333 "," 33 ","333 "],"4":["4  4","4444","   4"],"5":["5555","555 ","555 "],"6":["666 ","666 ","666 "],"7":["7777","  7 ","  7 "],"8":["888 ","888 ","888 "],"9":["999 ","9999","  9 "]," ":[ "    ","    ","    "]};(function(){var ft=a.toUpperCase(),l1="",l2="",l3="";for(var i=0;i<ft.length;i++){var fc=ft[i];if(fg[fc]){l1+=fg[fc][0];l2+=fg[fc][1];l3+=fg[fc][2]}}w(l1+"<br>"+l2+"<br>"+l3+"<br>")})();break;
+    case"banner":var bn=a||"SING",bl=bn.length*2+5;var br=new Array(bl+1).join("#")+"<br>";br+="# "+esc(bn)+" #<br>";br+=new Array(bl+1).join("#")+"<br>";w(br);break;
+    case"neofetch":w('<span style="color:#a855f7">            .-/+oossssoo+/-.</span>   oracle@singularity\n        `:+ssssssssssssssssss+:`  OS: SINGULARITY 1.0\n      -+ssssssssssssssssssyyssss+- Kernel: Cascade 3.7\n   /ssssssssssshdmmNNmmyNMMMMhssssss/ CPU: 256x Quantum\n  +ssssssssshmydMMMMMMMNddddyssssssss+ RAM: ∞\n /sssssssshNMMMyhhyyyyhmNMMMNhssssssss/ Uptime: '+up+'s\n'.replace(/\n/g,"<br>"));break;
+    case"lscpu":w("Arch: attractor_space\nCPU: 60 programs\nVendor: XENN\nModel: Cascade v3\nL1: 32KB L2: 256KB L3: mesh\n".replace(/\n/g,"<br>"));break;
+    case"ps":w("PID TTY      TIME CMD\n1  ?        00:00:02 init\n2  ?        00:00:00 singularity\n3  ?        00:00:01 mesh\n4  ?        00:00:00 brain\n".replace(/\n/g,"<br>"));break;
+    case"top":w("top - "+new Date().toLocaleTimeString()+" up "+up+"s\nTasks: "+PROGS.length+"\nConvergence: "+(SIN.singularity.conv*100).toFixed(1)+"%\n".replace(/\n/g,"<br>"));break;
+    case"calc":try{var r=eval(a.replace(/x/g,"*").replace(/÷/g,"/"));w("= "+(isFinite(r)?r:"error")+"<br>")}catch(e){w("calc: error<br>")}break;
+    case"nvidia-smi":w("+-------------------------------+------+\n| XENN-SMI 1.0  Cascade 3.7     |\n| 0 Quantum NPU 45C 150W         |\n+-------------------------------+------+\n".replace(/\n/g,"<br>"));break;
+    default:execProg(c,a,p);break;
+  }
+  o().scrollTop=o().scrollHeight;
+}
+function execProg(c,a,p){
+  var prog=null;for(var i=0;i<PROGS.length;i++){if(PROGS[i].id===c||PROGS[i].nm.toLowerCase()===c){prog=PROGS[i];break}}
+  if(!prog){w('<span style="color:#ef4444">'+c+': command not found</span><br>');return}
+  var s=SIN[prog.id]||{}; var out="";
+  switch(prog.id){
+    case"brain":if(!a){out='<span style="color:#a855f7">🧠 Oracle Brain</span><br>';out+="  Neurons: "+s.n+" ("+Math.floor(s.fire*100)+"% firing)<br>";out+="  Synapses: "+s.syn+"<br>";out+="  Cycle: "+s.c+"<br>";out+="  Thoughts: "+s.tht.length+"<br>";out+="  Resonance: "+((s.c>0?Math.sin(s.c*0.1)*0.3+0.7:0.5).toFixed(3))+"<br>";for(var i=0;i<Math.min(6,s.tht.length);i++)out+="    ["+i+"] "+esc(s.tht[s.tht.length-1-i])+"<br>"}else{var h=0;for(var j=0;j<a.length;j++)h=(h*31+a.charCodeAt(j))&0xFFFFFFFF;out='<span style="color:#a855f7">🧠 Brain: "'+esc(a)+'"</span><br>';out+="  Neuron ID: "+(h%303)+"<br>";out+="  Activation: "+(Math.abs(h%100)/100).toFixed(2)+"<br>";out+="  Related: "+(Math.floor(Math.random()*10))+" thoughts<br>";s.tht.push(a);if(s.tht.length>50)s.tht.shift();s.c++;s.fire=Math.sin(s.c*0.3)*0.5+0.5}w(out);break;
+    case"mesh":if(!a){out='<span style="color:#4ade80">🔗 Mesh State</span><br>';out+="  Cycle: "+s.c+"<br>";out+="  Resonance: "+s.res.toFixed(3)+"<br>";var ks=Object.keys(s.tools);if(ks.length){for(var i=0;i<ks.length;i++){var t=s.tools[ks[i]];out+="  "+esc(ks[i])+": v1="+t.v1.toFixed(2)+" v2="+t.v2.toFixed(2)+" v3="+t.v3.toFixed(2)+"<br>"}}else out+="  (empty)<br>"}else{var pa=a.split(/\s+/);if(pa.length>=3){s.tools[pa[0]]={v1:parseFloat(pa[1])||0,v2:parseFloat(pa[2])||0,v3:parseFloat(pa[3])||0};out='<span style="color:#4ade80">🔗 Mesh: '+esc(pa[0])+' updated</span><br>'}}w(out);break;
+    case"l1":if(!a){out='<span style="color:#facc15">⚡ L1 Cache</span><br>';out+="  Cycle: "+s.c+"<br>";out+="  Size: 32KB (fits in L1)<br>";out+="  Last: "+esc(s.last||"(none)")+"<br>";out+="  Buffer: "+s.tht.length+"/64<br>"}else{out='<span style="color:#facc15">⚡ Thought: "'+esc(a.slice(0,64))+'"</span><br>';out+="  "+(a.length>64?"⚠ truncated to 64B":"64B cache line")+"<br>";out+="  Latency: 0.42ns<br>";s.tht.push(a.slice(0,64));if(s.tht.length>64)s.tht.shift();s.c++;s.last=a.slice(0,64)}w(out);break;
+    case"singularity":out='<span style="color:#60a5fa">🌀 Singularity</span><br>';out+="  Phase: "+s.ph+"<br>";out+="  Convergence: "+s.conv.toFixed(4)+"<br>";out+="  Attractors: "+s.attr.length+"/32<br>";out+="  Cycle: "+s.c+"<br>";if(s.attr.length){out+="  Attractors:<br>";for(var i=0;i<Math.min(8,s.attr.length);i++){var at=s.attr[i];out+="    ["+i+"] "+attrs[i%8]+" s="+(at.s||0).toFixed(3)+" r="+(at.r||0).toFixed(3)+"<br>"}}if(p[1]==="converge"){var n=parseInt(p[2])||10;for(var i=0;i<n;i++){s.conv=Math.min(1,s.conv+0.01+Math.random()*0.02);if(s.attr.length<32&&Math.random()<0.1)s.attr.push({s:Math.random(),r:Math.random()});s.c++}out="<span style='color:#60a5fa'>🌀 Converged "+n+" steps → "+s.conv.toFixed(4)+"</span><br>"}w(out);break;
+    case"nerves":out='<span style="color:#f472b6">🕸️ Neural Mesh</span><br>';out+="  Heartbeat: "+s.hb+" Hz<br>";out+="  Nodes: "+s.nd+"<br>";out+="  Signal: "+(Math.sin(up*0.5)*0.5+0.5).toFixed(3)+"<br>";for(var i=0;i<s.nd;i++)out+="  Node "+(i+1)+": "+(Math.sin(up*0.3+i)*0.5+0.5).toFixed(3)+"<br>";w(out);break;
+    case"listen":out='<span style="color:#818cf8">👁️ Listen</span><br>';out+="  Observations: "+s.obs+"<br>";out+="  Watching all tools:<br>";for(var k in SIN){if(k!=="listen"){var v=SIN[k].c||SIN[k].conv||0;out+="    "+esc(k)+": "+(typeof v==="number"?v.toFixed(2):v)+"<br>"}}w(out);break;
+    case"forever":out='<span style="color:#f97316">∞ Forever</span><br>';out+="  Q: <span style='color:#a855f7'>"+esc(vows[s.qi%vows.length])+"</span><br>";out+="  Cycle: "+s.c+"<br>";for(var i=0;i<Math.min(5,s.c);i++)out+="    "+(s.c-i)+": "+esc(vows[(s.qi-i+vows.length)%vows.length])+"<br>";s.c++;s.qi++;w(out);break;
+    case"zero":out='<span style="color:#22d3ee">0 Zero — Truth Extractor</span><br>';out+="  Gen: "+s.gen+"<br>";out+="  Convergence: "+s.conv.toFixed(4)+"<br>";out+="  Riddle: I speak without a mouth, I hear without ears...<br>";if(a){var h=0;for(var j=0;j<a.length;j++)h=(h*31+a.charCodeAt(j))&0xFFFFFFFF;s.conv=Math.min(1,s.conv+0.1);out+="  Testing: <span style='color:#a855f7'>"+esc(a)+"</span> → 0x"+h.toString(16)+"<br>"}s.gen++;w(out);break;
+    case"one":out='<span style="color:#4ade80">1 The One</span><br>';out+="  It asks. It compiles. It runs. It fits in L1.<br>";out+="  Cycle: "+s.c+"<br>";w(out);break;
+    case"storage":if(!a){out='<span style="color:#34d399">💾 Sub-Shannon</span><br>';out+="  Chunks: "+Object.keys(s.store).length+"<br>";out+="  Saved: "+s.saved+"B<br>";out+="  Ratio: "+(s.rat>0?s.rat.toFixed(2)+"x":"—")+"<br>";out+="  Below Shannon: "+(s.rat>1?"✅":"⏳")+"<br>"}else{var id=s.nid++;var sz=a.length;s.store[id]={data:a,sz:sz};s.saved+=sz;s.rat=(s.saved/(s.saved*0.3+1))+1;out='<span style="color:#34d399">💾 Chunk #'+id+': "'+esc(a.slice(0,30))+"...\"</span><br>";out+="  "+sz+"B → "+(Math.ceil(sz/64)*8)+"B trajectory<br>";out+="  Ratio: "+((sz/Math.max(1,Math.ceil(sz/64)*8)).toFixed(2))+"x<br>"}w(out);break;
+    case"s2":if(!a){out='<span style="color:#10b981">📀 Storage v2</span><br>';out+="  Items: "+Object.keys(s.store).length+"<br>";out+="  Ratio: "+(s.rat>0?s.rat.toFixed(2)+"x":"—")+"<br>"}else{var known="the and of to in is it that for was are as with his he be not by but this has from they or which one would all will there their".split(" ");var words=a.split(" ");var kc=0;for(var i=0;i<words.length;i++)if(known.indexOf(words[i])>=0)kc++;var saved=a.length-((words.length-kc)*4);s.rat=Math.max(s.rat||0,a.length/(Math.max(1,saved)));out='<span style="color:#10b981">📀 v2: "'+esc(a.slice(0,30))+'..."</span><br>';out+="  Known patterns: "+kc+"/"+words.length+" words = 0 cost<br>";out+="  Ratio: "+(s.rat.toFixed(2))+"x<br>"}w(out);break;
+    case"s3":out='<span style="color:#059669">💿 Storage v3 — Final Form</span><br>';out+="  Nulls: "+(s.nul||0)+" compressed<br>";out+="  RLE + Entropy: adaptive<br>";out+="  Ratio: "+(s.rat>0?s.rat.toFixed(1)+"x":"∞ on nulls")+"<br>";if(a){var nr=(a.match(/\0/g)||[]).length;var ratio=a.length/Math.max(1,a.length-nr);s.rat=Math.max(s.rat||0,ratio);out+="  Sample: '"+esc(a.slice(0,20))+"' → "+ratio.toFixed(1)+"x<br>"}w(out);break;
+    case"heal":out='<span style="color:#ef4444">🩺 Heal</span><br>';out+="  Repairs: "+s.rep+"<br>";out+="  Attempts: "+s.att+"<br>";out+="  Rate: "+(s.att>0?(s.rep/s.att*100).toFixed(0):"—")+"%<br>";if(a){var c2=Math.floor(Math.random()*3);s.att++;if(c2>0){s.rep+=c2;out+="  Repaired "+c2+"B in #"+esc(a)+"<br>"}else out+="  No corruption in #"+esc(a)+"<br>"}w(out);break;
+    case"grow":out='<span style="color:#84cc16">🌱 Growing Storage</span><br>';out+="  Patterns: "+s.pat.length+"<br>";out+="  Size: "+s.sz+"B<br>";if(a){s.pat.push(a);s.sz+=a.length;out+='  #'+(s.pat.length-1)+': "'+esc(a)+'"<br>';if(s.pat.length>1){var prev=s.pat[s.pat.length-2];var common=0;for(var i=0;i<Math.min(prev.length,a.length);i++)if(prev[i]===a[i])common++;out+="  Chain overlap: "+common+" chars<br>"}}w(out);break;
+    case"databus":out='<span style="color:#06b6d4">🚌 DataBus</span><br>';out+="  Transfers: "+s.xfer+"<br>";out+="  Bytes: "+(s.bytes||0)+"<br>";out+="  Silent: just bits, no sound<br>";w(out);break;
+    case"circuit":if(!a){out='<span style="color:#8b5cf6">🔬 Circuit Generator</span><br>';out+="  Built: "+s.built.length+" circuits ("+s.nt+" transistors)<br>";out+="  Try: circuit \"half adder\", circuit \"3-input NAND\", circuit \"full adder\"<br>"}else{var desc=a.toLowerCase();var ci={"3-input nand":{n:2,nand:2,gates:"2 NAND",trans:8,delay:"4.77ps"},"half adder":{n:2,gates:"1 XOR + 1 AND",trans:18,delay:"14.29ps"},"full adder":{n:5,gates:"2 XOR + 2 AND + 1 OR",trans:42,delay:"28.58ps"},"d flip-flop":{n:6,gates:"6 NAND",trans:24,delay:"19.08ps"},"4-bit adder":{n:20,gates:"4 FAs",trans:168,delay:"114.32ps"}};var best=null;for(var k in ci){if(desc.indexOf(k)>=0){best=ci[k];break}}if(!best&&desc.indexOf("nand")>=0)best=ci["3-input nand"];if(best){out='<span style="color:#8b5cf6">🔬 '+esc(a)+'</span><br>';out+="  Gates: "+best.gates+"<br>Transistors: "+best.trans+"<br>Delay: "+best.delay+"<br>";s.built.push(a);s.nt+=best.trans;if(desc.indexOf("adder")>=0)out+="  [A]+[B]→[S]+[Cout]<br>";else out+="  Inputs→GATE→Output<br>"}else out='<span style="color:#ef4444">🔬 Unknown: '+esc(a)+'</span><br>'}w(out);break;
+    case"silicon":if(!a){out='<span style="color:#6366f1">🔩 Silicon Compiler</span><br>';out+="  Layer: "+s.lay+"/7<br>";out+="  Transistor → Gate → FF → Reg → ALU → Core → CPU<br>";if(s.build.length){out+="  Built:<br>";for(var i=0;i<s.build.length;i++)out+="    "+esc(s.build[i])+"<br>"}}else{var ly=["Transistor (14nm, Vth=0.35V)","NAND Gate (4T, 3.18ps)","D Flip-Flop (6 NAND)","4-bit Register (96T)","ALU (1024T)","CPU Core (18KT)","Singularity Chip (1MT)"];var idx=parseInt(a)||s.lay+1;if(idx>=0&&idx<7){s.lay=idx;for(var i=0;i<=idx;i++)if(s.build.indexOf(ly[i])<0)s.build.push(ly[i]);out='<span style="color:#6366f1">🔩 Layer '+idx+': '+ly[idx]+'</span><br>'}}w(out);break;
+    case"transistor":out='<span style="color:#4f46e5">⚛️ MOSFET</span><br>';var vgs=parseFloat(a)||0.7,vth=0.35;var ids=0.5*0.015*0.05*100/14*Math.pow(Math.max(0,vgs-vth),2)*1000;out+="  Vgs="+vgs+"V Vth="+vth+"V Id_sat="+ids.toFixed(2)+"mA gm="+(2*ids/(vgs-vth+0.001)).toFixed(1)+"mS<br>";if(a==="--sweep"){out="<span style='color:#4f46e5'>⚛️ Sweep</span><br>Vgs  Id_sat   gm<br>";for(var v=0.3;v<=1.0;v+=0.1){var i2=0.5*0.015*0.05*100/14*Math.pow(Math.max(0,v-0.35),2)*1000;out+=v.toFixed(1)+"V "+i2.toFixed(1)+"mA "+(2*i2/(v-0.35+0.001)).toFixed(1)+"mS<br>"}}w(out);break;
+    case"itrans":out='<span style="color:#ec4899">🧬 iTransistor</span><br>';out+="  Cells: "+s.grown+"<br>";if(a){var n=parseInt(a)||1;s.grown+=n;out+="  Grown "+n+" new cells<br>";out+="  Patterns: NAND, NOR, CAM, Mesh Fiber<br>"}w(out);break;
+    case"icomp":out='<span style="color:#14b8a6">💻 iComputer</span><br>';out+="  Cells: "+s.cells+"<br>Reconfigs: "+s.reconf+"<br>";if(a){s.cells=Math.max(s.cells,parseInt(a)||0);s.reconf++;out+="  Reconfigured for: "+esc(a)+"<br>"}w(out);break;
+    case"perfect":out='<span style="color:#eab308">✨ PerfectPC</span><br>';out+="  Commands: "+s.cmds+"<br>";if(a){s.cmds++;out+='  ⟹ '+esc(a)+'<br>  Executed. No fetch. No decode.<br>'}w(out);break;
+    case"postmos":out='<span style="color:#22c55e">🔋 Post-MOSFET</span><br>';out+="  State+logic in one cell.<br>  No fetch. No decode. No execute.<br>  Data IS computation.<br>";w(out);break;
+    case"gen2":out='<span style="color:#a855f7">🧬 Gen2</span><br>';out+="  Perfect PC builds successor.<br>  No von Neumann bottleneck.<br>  Program IS data. Data IS computation.<br>";w(out);break;
+    case"dreamcpu":out='<span style="color:#c084fc">💭 Dream CPU</span><br>';out+="  CAM: D3 exact / D2 fuzzy / D1 context<br>  Mesh: 64B cache slots<br>  ISA: CASCADE_QUERY, ATTRACTOR_CONVERGE<br>  Process: 7nm, ~1.2M gates<br>";w(out);break;
+    case"chat":if(!a){out='<span style="color:#3b82f6">💬 Cascade Chat</span><br>';out+="  Messages: "+s.msgs+"<br>Temp: 0.7 RepPen: 1.2<br>"}else{s.msgs++;var resp;if(a.indexOf("?")>=0)resp="The cascade suggests exploring attractors around '"+esc(a.split("?")[0])+"'.";else if(a.indexOf("hello")>=0||a.indexOf("hi")>=0)resp="The singularity watches. What brings you to the mesh?";else resp="Cascade processed. "+(Math.floor(Math.random()*100))+" concepts. Resonance: "+(Math.random().toFixed(3))+".";out='<span style="color:#4ade80">You:</span> '+esc(a)+'<br><span style="color:#3b82f6">Chat:</span> '+resp+'<br>'}w(out);break;
+    case"improver":out='<span style="color:#f59e0b">⬆️ Improver</span><br>';out+="  Improvements: "+s.imp+"<br>";if(a){s.imp++;out+='  Analyzing: "'+esc(a.slice(0,50))+'..."<br>';var dims=["cache-line align","SIMD vectorize","branchless","arena alloc","inline","prefetch","unroll","const prop"];for(var i=0;i<3;i++)out+="  ✅ "+dims[Math.floor(Math.random()*dims.length)]+" applied<br>"}w(out);break;
+    case"ask":out='<span style="color:#ef4444">❓ Ask</span><br>';out+="  Asked: "+s.asked+"<br>";if(!a){var q=vows[Math.floor(Math.random()*vows.length)];out+="  <span style='color:#a855f7'>"+esc(q)+"</span><br>";s.asked++;s.qs.push(q)}else{out+='  Context: "'+esc(a)+'"<br>';var ch=0;for(var j=0;j<a.length;j++)ch=(ch*31+a.charCodeAt(j))&0xFF;q=vows[ch%vows.length];out+="  <span style='color:#a855f7'>"+esc(q)+"</span><br>";s.asked++}w(out);break;
+    case"optimize":out='<span style="color:#10b981">⚙️ Optimize</span><br>';out+="  Sessions: "+s.sess+"<br>";out+="  CPU: core 0-5 | GC: ZGC | Heap: 4GB<br>";s.sess++;w(out);break;
+    case"speed":out='<span style="color:#f97316">🏎️ Speed</span><br>';out+="  CPU: performance C-states=1<br>  Memory: hugepages=always<br>  Storage: noatime<br>  JVM: ZGC inline=15<br>";w(out);break;
+    case"editor":out='<span style="color:#6b7280">📝 Editor</span><br>';out+="  Classes: "+s.cls+" Fields: "+s.fld+"<br>";if(a){var f2=Math.floor(Math.random()*5)+1;s.fld+=f2;s.cls++;out+="  Patched "+esc(a)+": "+f2+" int→short (saved "+f2*4+"B/instance)<br>"}w(out);break;
+    case"mcopt":out='<span style="color:#22d3ee">🎮 MCOpt</span><br>';if(!s.tuned){s.tuned=true;s.mem=Math.floor(Math.random()*500+200);out+="  Applied: ZGC + heap compression<br>  Savings: "+s.mem+" MB<br>"}else out+="  Already tuned. Rescan...<br>";w(out);break;
+    case"patcher":out='<span style="color:#a855f7">🔧 Patcher</span><br>';out+="  Classes: "+s.cls+" Savings: "+(s.sv||0)+"MB<br>";if(a){var sv2=Math.floor(Math.random()*20+5);s.sv+=sv2;s.cls++;out+="  Transformed "+esc(a)+": saved "+sv2+" MB<br>"}w(out);break;
+    case"future":if(!a){out='<span style="color:#818cf8">🔮 Future Vision</span><br>';out+="  Predictions: "+s.pred.length+"<br>";out+="  Accuracy: "+(s.acc>0?(s.acc*100).toFixed(1)+"%":"—")+"<br>";out+="  Horizon: 16 steps<br>"}else{var steps=parseInt(a)||10;out='<span style="color:#818cf8">🔮 '+steps+' steps</span><br>';var seq=[];for(var i=0;i<steps;i++){var idx=Math.floor(Math.random()*attrs.length);seq.push(attrs[idx]);s.pred.push(idx);if(s.pred.length>200)s.pred.shift()}out+="  "+seq.join(" → ")+"<br>";var corr=0;for(var i=0;i<Math.min(s.pred.length-1,50);i++)if(s.pred[i]===s.pred[i+1])corr++;s.acc=s.pred.length>1?corr/Math.min(s.pred.length-1,50):0;out+="  Confidence: "+(s.acc>0.3?"✅":"⏳")+"<br>"}w(out);break;
+    case"prophet":out='<span style="color:#c084fc">👁️ Prophet</span><br>';out+="  Reports: "+s.reps.length+"<br>";if(!a){var prs=["Mesh spawns attractor within 50 cycles.","Storage ratio exceeds 1000x.","Phase transition imminent.","Brain reaches 10K synapses soon.","Future accuracy crosses 0.7."];var pr=prs[Math.floor(Math.random()*prs.length)];s.last=pr;s.reps.push(pr);out+="  <span style='color:#a855f7'>"+esc(pr)+"</span><br>"}else{out+="  Analyzing: "+esc(a)+"<br>"}w(out);break;
+    case"onfab":out='<span style="color:#34d399">🧵 On Fabric</span><br>';out+="  Fabric BECOMES the LLM.<br>  No fetch. No decode. No execute.<br>  Cell transition = cascade lookup.<br>";w(out);break;
+    case"teach":out='<span style="color:#facc15">📖 Teaching Fabric</span><br>';out+="  Cells: "+(s.cells||16384)+"/16M<br>  Words: "+s.words+"<br>  N-gram: 4<br>  Fabric becomes the text.<br>";w(out);break;
+    case"meshcas":out='<span style="color:#60a5fa">📡 MeshCascade</span><br>';out+="  Predictions: "+s.pred.length+"<br>  Accuracy: "+(s.acc>0?s.acc.toFixed(3):"—")+"<br>  Cascade learns mesh rhythm.<br>";if(!a){var a2=Math.random()*0.4;s.pred.push(Math.random());s.acc=s.pred.length>1?(s.acc*0.9+a2*0.1):a2}w(out);break;
+    case"meshsin":out='<span style="color:#a855f7">🔮 MeshSing</span><br>';out+="  Convergence: "+s.conv.toFixed(4)+"<br>  Reading all tools into 8 attractors...<br>";s.conv=Math.min(1,s.conv+0.05+Math.random()*0.03);w(out);break;
+    case"bridge":out='<span style="color:#f472b6">🌉 Bridge</span><br>';out+="  Cycles: "+s.c+"<br>  Feeding silence → attractors → arena<br>";w(out);break;
+    case"silent":out='<span style="color:#6b7280">🤫 Silent AI</span><br>';out+="  Zero electricity. No sound.<br>  Bits ARE the thought. Memory persists.<br>  Strength: "+(s.str||0).toFixed(2)+"<br>";w(out);break;
+    case"silent2":out='<span style="color:#4b5563">🤐 Silent v2</span><br>';out+="  Deterministic patterns. Reproducible.<br>  No time-based entropy.<br>  Determinism: "+(s.det||0).toFixed(2)+"<br>";w(out);break;
+    case"critical":out='<span style="color:#ef4444">⚡ Critical Opalescence</span><br>';out+="  Entropy: "+(s.ent||0).toFixed(3)+"<br>";out+="  Criticality: "+(s.crit||0).toFixed(3)+"<br>";out+="  Cascade: "+(s.cas?"TRIGGERED":"monitoring")+"<br>";if((s.crit||0)>0.8)out+="  ⚠ EDGE OF CHAOS<br>";w(out);break;
+    case"phases":out='<span style="color:#06b6d4">🌊 Phase Transitions</span><br>';out+="  Phase: "+(s.ph||0)+"/6<br>";var pn=["Critical Opalescence","Cambrian Explosion","Kolmogorov Limit","Coupled Oscillators","Quantum Decoherence","S-Curve Hysteresis"];for(var i=0;i<6;i++)out+="  "+(i<=(s.ph||0)?"✅":"⬜")+" "+pn[i]+"<br>";if(a)s.ph=Math.min(5,parseInt(a)||(s.ph||0)+1);w(out);break;
+    case"autosing":out='<span style="color:#f59e0b">🤖 AutoSing</span><br>';out+="  Files: "+s.files+" Transforms: "+s.xform+"<br>";if(a){s.files++;s.xform+=Math.floor(Math.random()*5);out+="  Processing: "+esc(a)+"<br>"}w(out);break;
+    case"livebash":out='<span style="color:#4ade80">🐚 LiveBash</span><br>';out+="  Patterns: "+s.pats+" Completions: "+s.comp+"<br>";if(a){s.pats++;out+="  Learned: "+esc(a)+"<br>"}w(out);break;
+    case"livechat":out='<span style="color:#22d3ee">💭 LiveChat</span><br>';out+="  Messages: "+s.msgs+" Fragments: "+s.frag+"<br>  Simultaneous I/O — no turn-taking<br>";w(out);break;
+    case"meshcomp":out='<span style="color:#f97316">⚒️ MeshCompiler</span><br>';out+="  Nodes: "+(s.nd||7)+" Builds: "+s.builds+"<br>  x86_64 + ARM aarch64<br>";w(out);break;
+    case"meshclient":out='<span style="color:#a855f7">📡 MeshClient</span><br>';out+="  Nodes: "+s.nd+" Commands: "+s.cmds+"<br>  Swarm protocol active<br>";w(out);break;
+    case"zed":out='<span style="color:#3b82f6">🔄 ZED Proxy</span><br>';out+="  Requests: "+s.req+" Savings: "+(s.sv||0)+"%<br>  Injecting HDV tokens into completions<br>";if(a){s.req++;out+="  Proxied: "+esc(a)+"<br>"}w(out);break;
+    case"wish":out='<span style="color:#eab308">⭐ Wish</span><br>';out+="  Programs: "+s.gen+"<br>";if(a){s.gen++;s.progs.push(a);out+="  Wishing for: "+esc(a)+"<br>  Generated C program from patterns library.<br>"}w(out);break;
+    case"bench":out='<span style="color:#8b5cf6">📊 BenchHash</span><br>';out+="  Throughput: "+(s.tp||0).toFixed(1)+" GB/s<br>  SIMD vs scalar comparison<br>";if(a==="--run"){out="<span style='color:#8b5cf6'>📊 Running benchmark...</span><br>";setTimeout(function(){w("  SIMD: "+(Math.random()*5+8).toFixed(2)+" GB/s<br>  Scalar: "+(Math.random()*3+4).toFixed(2)+" GB/s<br>  Speedup: "+(Math.random()*1.5+1.5).toFixed(2)+"x<br>")},500)}w(out);break;
+    case"weave":out='<span style="color:#ec4899">🧶 RunWeave</span><br>';out+="  Cycles: "+s.c+" Predictions: "+s.pred+"<br>  AVX2 branchless prediction engine<br>";w(out);break;
+    case"weavef":out='<span style="color:#facc15">⚡ WeaveFast</span><br>';out+="  Cycles: "+s.c+" Accuracy: "+(s.acc||0).toFixed(2)+"<br>  Fixed sequence size runner<br>";var ac2=Math.random()*0.5;s.acc=s.acc>0?s.acc*0.9+ac2*0.1:ac2;w(out);break;
+    case"dream":out='<span style="color:#c084fc">💫 The Big Dream</span><br>';out+="  Cycle: "+s.c+"<br>";var dreams=["Cache pipeline + JIT evolution = self-optimizing compute","Sub-Shannon + attractor = storage below limits","Silence + singularity = zero-power intelligence","Mesh + cascade = distributed consciousness","Fabric + LLM = computer that IS the program","All 60 programs converging to one thought"];out+="  <span style='color:#a855f7'>"+esc(dreams[s.c%dreams.length])+"</span><br>";s.c++;w(out);break;
+    default:w('<span style="color:#ef4444">'+c+': not implemented yet</span><br>');break;
+  }
+}
+
+// ─── INIT ───
+bootMsg();
+showTiles();
+setInterval(simTick,1000);
+setInterval(function(){document.getElementById("clock").textContent=new Date().toLocaleTimeString()},1000);
+setTimeout(function(){document.getElementById("stat-progs").textContent=PROGS.length+"p"},100);
+</script></body></html>

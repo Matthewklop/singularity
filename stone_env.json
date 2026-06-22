@@ -1,0 +1,1095 @@
+{
+  "generated": "2026-06-17",
+  "host": {
+    "arch": "x86_64",
+    "cpu": "Intel(R) Core(TM) Ultra 7 155H",
+    "cores": 6,
+    "l3_cache": "24 MB",
+    "features": [
+      "avx2",
+      "avx_vnni",
+      "sse4_1",
+      "sse4_2",
+      "fma",
+      "aes",
+      "sha_ni",
+      "vaes",
+      "vpclmulqdq",
+      "gfni"
+    ]
+  },
+  "programs": {
+    "2to3": {
+      "path": "/usr/bin/2to3",
+      "size": 94,
+      "type": "other"
+    },
+    "411toppm": {
+      "path": "/usr/bin/411toppm",
+      "size": 14640,
+      "type": "binary",
+      "file_type": "/usr/bin/411toppm: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=161b49bba8bdbabb5bd7223e28ad3def940b23d2, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "7z": {
+      "path": "/usr/bin/7z",
+      "size": 38,
+      "type": "other"
+    },
+    "7za": {
+      "path": "/usr/bin/7za",
+      "size": 39,
+      "type": "other"
+    },
+    "7zr": {
+      "path": "/usr/bin/7zr",
+      "size": 39,
+      "type": "other"
+    },
+    "JxrDecApp": {
+      "path": "/usr/bin/JxrDecApp",
+      "size": 27008,
+      "type": "binary",
+      "file_type": "/usr/bin/JxrDecApp: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=cd214885af2cbd1c9fd94618568d4b943d759ef3, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "JxrEncApp": {
+      "path": "/usr/bin/JxrEncApp",
+      "size": 28440,
+      "type": "binary",
+      "file_type": "/usr/bin/JxrEncApp: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=3c0f7f2bf85aadfda591bdf5305950c9aff2e4c3, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "SoapySDRUtil": {
+      "path": "/usr/bin/SoapySDRUtil",
+      "size": 88784,
+      "type": "binary",
+      "file_type": "/usr/bin/SoapySDRUtil: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=c39a592c0699832b6355c046763c5dd66b57d1cf, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "TreeLauncherSubreaper": {
+      "path": "/usr/bin/TreeLauncherSubreaper",
+      "size": 166776,
+      "type": "binary",
+      "file_type": "/usr/bin/TreeLauncherSubreaper: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.4.1, stripped",
+      "has_symbols": true
+    },
+    "TreeLauncherTargetLdPreloadHelper": {
+      "path": "/usr/bin/TreeLauncherTargetLdPreloadHelper",
+      "size": 14336,
+      "type": "binary",
+      "file_type": "/usr/bin/TreeLauncherTargetLdPreloadHelper: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.4.1, stripped",
+      "has_symbols": true
+    },
+    "Xdummy": {
+      "path": "/usr/bin/Xdummy",
+      "size": 46842,
+      "type": "shell",
+      "issues": [
+        "backticks (46)"
+      ]
+    },
+    "Xephyr": {
+      "path": "/usr/bin/Xephyr",
+      "size": 2446976,
+      "type": "binary",
+      "file_type": "/usr/bin/Xephyr: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=d82c4a387b8972f8198aac5c0640de182cd75e95, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "Xorg": {
+      "path": "/usr/bin/Xorg",
+      "size": 274,
+      "type": "shell",
+      "issues": []
+    },
+    "Xvfb": {
+      "path": "/usr/bin/Xvfb",
+      "size": 2064864,
+      "type": "binary",
+      "file_type": "/usr/bin/Xvfb: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=77aee991783e75cd34c975853694b560dcd72995, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "Xwayland": {
+      "path": "/usr/bin/Xwayland",
+      "size": 2241784,
+      "type": "binary",
+      "file_type": "/usr/bin/Xwayland: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=d262b4434579f4bed267f923fa8d70e3bfe019d1, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "[": {
+      "path": "/usr/bin/[",
+      "size": 55744,
+      "type": "binary",
+      "file_type": "/usr/bin/[: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=df02b5f3829d811cda46272d78300bac8efc46f3, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "__nvcc_device_query": {
+      "path": "/usr/bin/__nvcc_device_query",
+      "size": 659024,
+      "type": "binary",
+      "file_type": "/usr/bin/__nvcc_device_query: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32, BuildID[sha1]=410cb526491e5b6d951cfacbb455f031e07a6765, stripped",
+      "has_symbols": true
+    },
+    "aa-enabled": {
+      "path": "/usr/bin/aa-enabled",
+      "size": 18744,
+      "type": "binary",
+      "file_type": "/usr/bin/aa-enabled: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=fc748c03f341b97c4fff1ab0e44d59a34ea90fe7, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aa-exec": {
+      "path": "/usr/bin/aa-exec",
+      "size": 18744,
+      "type": "binary",
+      "file_type": "/usr/bin/aa-exec: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=2a1d695e2a48b8337fdb105d607b37ed7a07dfe5, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aa-features-abi": {
+      "path": "/usr/bin/aa-features-abi",
+      "size": 18736,
+      "type": "binary",
+      "file_type": "/usr/bin/aa-features-abi: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=a0e61a034e93c3a0cc2ca8f7c4119e5b938c4b33, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aarch64-linux-gnu-addr2line": {
+      "path": "/usr/bin/aarch64-linux-gnu-addr2line",
+      "size": 35616,
+      "type": "binary",
+      "file_type": "/usr/bin/aarch64-linux-gnu-addr2line: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=f4411ca331efe0d10637b8f06f7b073b15796218, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aarch64-linux-gnu-ar": {
+      "path": "/usr/bin/aarch64-linux-gnu-ar",
+      "size": 72184,
+      "type": "binary",
+      "file_type": "/usr/bin/aarch64-linux-gnu-ar: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=36be9ace43cb8763e6cd107d9bc94ff830ba89c8, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aarch64-linux-gnu-as": {
+      "path": "/usr/bin/aarch64-linux-gnu-as",
+      "size": 1054448,
+      "type": "binary",
+      "file_type": "/usr/bin/aarch64-linux-gnu-as: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=2088b0dae015f5bb1ca8f7dd73aefa0dbcc3389e, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aarch64-linux-gnu-c++filt": {
+      "path": "/usr/bin/aarch64-linux-gnu-c++filt",
+      "size": 35088,
+      "type": "binary",
+      "file_type": "/usr/bin/aarch64-linux-gnu-c++filt: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=d0f72c01274bf2ee1bd45a2b4fbf16f42ba6184e, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aarch64-linux-gnu-cpp-13": {
+      "path": "/usr/bin/aarch64-linux-gnu-cpp-13",
+      "size": 1727944,
+      "type": "binary",
+      "file_type": "/usr/bin/aarch64-linux-gnu-cpp-13: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=bb6a9c844d8ac4173aa966f6d8c5d8aac86f0ba0, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aarch64-linux-gnu-dwp": {
+      "path": "/usr/bin/aarch64-linux-gnu-dwp",
+      "size": 3771808,
+      "type": "binary",
+      "file_type": "/usr/bin/aarch64-linux-gnu-dwp: ELF 64-bit LSB pie executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=fe14e5c4baac058952d2695265971989c7d63b7a, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aarch64-linux-gnu-elfedit": {
+      "path": "/usr/bin/aarch64-linux-gnu-elfedit",
+      "size": 43760,
+      "type": "binary",
+      "file_type": "/usr/bin/aarch64-linux-gnu-elfedit: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=6877cefc654d6f2d5e5972de86f9bef6c61c75b1, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aarch64-linux-gnu-gcc-13": {
+      "path": "/usr/bin/aarch64-linux-gnu-gcc-13",
+      "size": 1723848,
+      "type": "binary",
+      "file_type": "/usr/bin/aarch64-linux-gnu-gcc-13: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=7890ce8a468cc92160b86ef450a9b9aa3f818943, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aarch64-linux-gnu-gcc-ar-13": {
+      "path": "/usr/bin/aarch64-linux-gnu-gcc-ar-13",
+      "size": 35536,
+      "type": "binary",
+      "file_type": "/usr/bin/aarch64-linux-gnu-gcc-ar-13: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=defc156baedcc43aa29e9419522c8b2e118abfc5, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aarch64-linux-gnu-gcc-nm-13": {
+      "path": "/usr/bin/aarch64-linux-gnu-gcc-nm-13",
+      "size": 35536,
+      "type": "binary",
+      "file_type": "/usr/bin/aarch64-linux-gnu-gcc-nm-13: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=e981e54344589b4896f3ba8ecf60020d3fb36153, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aarch64-linux-gnu-gcc-ranlib-13": {
+      "path": "/usr/bin/aarch64-linux-gnu-gcc-ranlib-13",
+      "size": 35536,
+      "type": "binary",
+      "file_type": "/usr/bin/aarch64-linux-gnu-gcc-ranlib-13: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=f39540fd51b459b51a934f60758821cd29d31d4c, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aarch64-linux-gnu-gcov-13": {
+      "path": "/usr/bin/aarch64-linux-gnu-gcov-13",
+      "size": 1122760,
+      "type": "binary",
+      "file_type": "/usr/bin/aarch64-linux-gnu-gcov-13: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=4a7fb4b34bc28043abc5b2d297bf776953086aa3, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aarch64-linux-gnu-gcov-dump-13": {
+      "path": "/usr/bin/aarch64-linux-gnu-gcov-dump-13",
+      "size": 1032584,
+      "type": "binary",
+      "file_type": "/usr/bin/aarch64-linux-gnu-gcov-dump-13: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=38416ec37ecc343757ee2815f00eb53d7bc8b875, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aarch64-linux-gnu-gcov-tool-13": {
+      "path": "/usr/bin/aarch64-linux-gnu-gcov-tool-13",
+      "size": 987520,
+      "type": "binary",
+      "file_type": "/usr/bin/aarch64-linux-gnu-gcov-tool-13: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=7299aac9377d2e781f9619066f1b6cbebaeff1f7, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aarch64-linux-gnu-gprof": {
+      "path": "/usr/bin/aarch64-linux-gnu-gprof",
+      "size": 110440,
+      "type": "binary",
+      "file_type": "/usr/bin/aarch64-linux-gnu-gprof: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=1f63738d685827735bc812da2ada84c5f6e78018, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aarch64-linux-gnu-ld.bfd": {
+      "path": "/usr/bin/aarch64-linux-gnu-ld.bfd",
+      "size": 1690464,
+      "type": "binary",
+      "file_type": "/usr/bin/aarch64-linux-gnu-ld.bfd: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=bc5254bdca0416f53f9b5438538cf34b9d788b5a, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aarch64-linux-gnu-ld.gold": {
+      "path": "/usr/bin/aarch64-linux-gnu-ld.gold",
+      "size": 6349280,
+      "type": "binary",
+      "file_type": "/usr/bin/aarch64-linux-gnu-ld.gold: ELF 64-bit LSB pie executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=c2566e9008bd5da7af21abe6de3e4827a66d51fd, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aarch64-linux-gnu-lto-dump-13": {
+      "path": "/usr/bin/aarch64-linux-gnu-lto-dump-13",
+      "size": 30066992,
+      "type": "binary",
+      "file_type": "/usr/bin/aarch64-linux-gnu-lto-dump-13: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=69fe88e971ab72a988f2be4202b6bab8269f88c1, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aarch64-linux-gnu-nm": {
+      "path": "/usr/bin/aarch64-linux-gnu-nm",
+      "size": 60904,
+      "type": "binary",
+      "file_type": "/usr/bin/aarch64-linux-gnu-nm: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=fa87ad9c9379fd24fbc5ea18c32b651652e20210, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aarch64-linux-gnu-objcopy": {
+      "path": "/usr/bin/aarch64-linux-gnu-objcopy",
+      "size": 195184,
+      "type": "binary",
+      "file_type": "/usr/bin/aarch64-linux-gnu-objcopy: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=12ffa05dac2589e7ffff3a7366337417b4b07bdd, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aarch64-linux-gnu-objdump": {
+      "path": "/usr/bin/aarch64-linux-gnu-objdump",
+      "size": 460272,
+      "type": "binary",
+      "file_type": "/usr/bin/aarch64-linux-gnu-objdump: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=44631229e2ea2d5f3bc48d7cc5e340fce1771d37, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aarch64-linux-gnu-ranlib": {
+      "path": "/usr/bin/aarch64-linux-gnu-ranlib",
+      "size": 72216,
+      "type": "binary",
+      "file_type": "/usr/bin/aarch64-linux-gnu-ranlib: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=f710491e824e2293c162201c53bd433ff9a877cb, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aarch64-linux-gnu-readelf": {
+      "path": "/usr/bin/aarch64-linux-gnu-readelf",
+      "size": 838400,
+      "type": "binary",
+      "file_type": "/usr/bin/aarch64-linux-gnu-readelf: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=57d917f4d82e372667cd1fce0e1331d680585842, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aarch64-linux-gnu-size": {
+      "path": "/usr/bin/aarch64-linux-gnu-size",
+      "size": 35280,
+      "type": "binary",
+      "file_type": "/usr/bin/aarch64-linux-gnu-size: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=621834a425142c2f198b5a7e49d73960967817c4, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aarch64-linux-gnu-strings": {
+      "path": "/usr/bin/aarch64-linux-gnu-strings",
+      "size": 39616,
+      "type": "binary",
+      "file_type": "/usr/bin/aarch64-linux-gnu-strings: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=317e9a7ff5e9404a76bfbeb15a08cf967afc2326, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aarch64-linux-gnu-strip": {
+      "path": "/usr/bin/aarch64-linux-gnu-strip",
+      "size": 195192,
+      "type": "binary",
+      "file_type": "/usr/bin/aarch64-linux-gnu-strip: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=8ac94a85e1725880b31d7342c09d9a71480bb736, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aclients": {
+      "path": "/usr/bin/aclients",
+      "size": 51584,
+      "type": "binary",
+      "file_type": "/usr/bin/aclients: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=8c6b9ea32326816ae0ae12cd14000f93705a96b4, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aclocal-1.16": {
+      "path": "/usr/bin/aclocal-1.16",
+      "size": 36020,
+      "type": "other"
+    },
+    "aconnect": {
+      "path": "/usr/bin/aconnect",
+      "size": 22912,
+      "type": "binary",
+      "file_type": "/usr/bin/aconnect: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=c25b8b06e3710a61cca75f18e2c339d908c2c617, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "acpibin": {
+      "path": "/usr/bin/acpibin",
+      "size": 47904,
+      "type": "binary",
+      "file_type": "/usr/bin/acpibin: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=b7850636e0f8a69f8abd227cc8d9b37e80ff0886, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "acpidbg": {
+      "path": "/usr/bin/acpidbg",
+      "size": 1622,
+      "type": "shell",
+      "issues": [
+        "backticks (8)"
+      ]
+    },
+    "acpidump": {
+      "path": "/usr/bin/acpidump",
+      "size": 51912,
+      "type": "binary",
+      "file_type": "/usr/bin/acpidump: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=f837a064ea9a07d4e2e9897b31f80a1f920912ee, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "acpiexec": {
+      "path": "/usr/bin/acpiexec",
+      "size": 663264,
+      "type": "binary",
+      "file_type": "/usr/bin/acpiexec: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=ed857906a8688114ea01f6084088566a0d6ed6a0, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "acpihelp": {
+      "path": "/usr/bin/acpihelp",
+      "size": 225824,
+      "type": "binary",
+      "file_type": "/usr/bin/acpihelp: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=18293290019e3c3cdda4e9379da07a5349b64a45, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "acpisrc": {
+      "path": "/usr/bin/acpisrc",
+      "size": 108896,
+      "type": "binary",
+      "file_type": "/usr/bin/acpisrc: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=e2bef1e9acd60e34b8a1811a03a5d1a305a9a957, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "acpixtract": {
+      "path": "/usr/bin/acpixtract",
+      "size": 39616,
+      "type": "binary",
+      "file_type": "/usr/bin/acpixtract: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=14bc45cda0a4bb13716d8f24a2be7e32e9167fe2, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "activate-global-python-argcomplete": {
+      "path": "/usr/bin/activate-global-python-argcomplete",
+      "size": 4934,
+      "type": "python",
+      "issues": [
+        "no_type_hints (9 funcs)"
+      ]
+    },
+    "acyclic": {
+      "path": "/usr/bin/acyclic",
+      "size": 14488,
+      "type": "binary",
+      "file_type": "/usr/bin/acyclic: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=7293277e9c1406823838d7f0417db6aa8936f31e, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "add-apt-repository": {
+      "path": "/usr/bin/add-apt-repository",
+      "size": 16422,
+      "type": "python",
+      "issues": [
+        "percent_format",
+        "no_type_hints (24 funcs)"
+      ]
+    },
+    "addpart": {
+      "path": "/usr/bin/addpart",
+      "size": 14720,
+      "type": "binary",
+      "file_type": "/usr/bin/addpart: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=3b53b6a7d1fc0d16d40b16962fb850b1600add01, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aircrack-ng": {
+      "path": "/usr/bin/aircrack-ng",
+      "size": 154496,
+      "type": "binary",
+      "file_type": "/usr/bin/aircrack-ng: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=60ce6260732ee797122ab086c15bfb3807067881, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "airdecap-ng": {
+      "path": "/usr/bin/airdecap-ng",
+      "size": 43320,
+      "type": "binary",
+      "file_type": "/usr/bin/airdecap-ng: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=04d14f9ed0c5f6b719309569d4f1076bf9834c6c, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "airdecloak-ng": {
+      "path": "/usr/bin/airdecloak-ng",
+      "size": 31104,
+      "type": "binary",
+      "file_type": "/usr/bin/airdecloak-ng: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=dab48a8a4b333b778bc45d0fbad36fa417d8833f, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "airolib-ng": {
+      "path": "/usr/bin/airolib-ng",
+      "size": 43392,
+      "type": "binary",
+      "file_type": "/usr/bin/airolib-ng: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=960bf81be3a87ec9d9f269b79d701f6094941c76, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "airscan-discover": {
+      "path": "/usr/bin/airscan-discover",
+      "size": 158576,
+      "type": "binary",
+      "file_type": "/usr/bin/airscan-discover: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=3aacd8dc56ef68f0bf39263482274794155d0e1c, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aisdecode": {
+      "path": "/usr/bin/aisdecode",
+      "size": 2464,
+      "type": "python",
+      "issues": [
+        "bare_except"
+      ]
+    },
+    "alsabat": {
+      "path": "/usr/bin/alsabat",
+      "size": 47552,
+      "type": "binary",
+      "file_type": "/usr/bin/alsabat: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=4bdc6a5439ad298d68a6c5715e318ae7c24e9d24, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "alsaloop": {
+      "path": "/usr/bin/alsaloop",
+      "size": 85328,
+      "type": "binary",
+      "file_type": "/usr/bin/alsaloop: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=a73bf4db27f9e00fbbccf767dc6470348dee3243, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "alsamixer": {
+      "path": "/usr/bin/alsamixer",
+      "size": 82216,
+      "type": "binary",
+      "file_type": "/usr/bin/alsamixer: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=fefe67412237d1069d34fb2bf73a1d8b2e623cb8, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "alsatplg": {
+      "path": "/usr/bin/alsatplg",
+      "size": 76160,
+      "type": "binary",
+      "file_type": "/usr/bin/alsatplg: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=7e4a384ad13420a878c8ad1ff462fd4f9f0efd12, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "alsaucm": {
+      "path": "/usr/bin/alsaucm",
+      "size": 31576,
+      "type": "binary",
+      "file_type": "/usr/bin/alsaucm: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=ec52e4a622b2a1c57ee508db958dccd5c6bbddce, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "ambiguous_words": {
+      "path": "/usr/bin/ambiguous_words",
+      "size": 22928,
+      "type": "binary",
+      "file_type": "/usr/bin/ambiguous_words: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=e6eb30400291bc1c50473da81e8b600a75e3db15, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "amd_hdmi_compliance": {
+      "path": "/usr/bin/amd_hdmi_compliance",
+      "size": 22008,
+      "type": "binary",
+      "file_type": "/usr/bin/amd_hdmi_compliance: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=97e8da265b1ff8a87fd376e9b525d933ebad248c, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "amidi": {
+      "path": "/usr/bin/amidi",
+      "size": 31112,
+      "type": "binary",
+      "file_type": "/usr/bin/amidi: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=d7324cb5799dcabc6ac7d000ab4dcac5c187c0f1, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "amixer": {
+      "path": "/usr/bin/amixer",
+      "size": 63952,
+      "type": "binary",
+      "file_type": "/usr/bin/amixer: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=ce0a7fb02dceda6f801055d166a6754ab8333ef2, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "amuFormat.sh": {
+      "path": "/usr/bin/amuFormat.sh",
+      "size": 2668,
+      "type": "shell",
+      "issues": []
+    },
+    "animate-im6.q16": {
+      "path": "/usr/bin/animate-im6.q16",
+      "size": 14656,
+      "type": "binary",
+      "file_type": "/usr/bin/animate-im6.q16: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=65ccb6f86d930b9c393382571668a25d8ae88f08, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "anydesk": {
+      "path": "/usr/bin/anydesk",
+      "size": 42825832,
+      "type": "binary",
+      "file_type": "/usr/bin/anydesk: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=ffc14143ad17ee20088ef0f667b4afacdc12c073, stripped",
+      "has_symbols": true
+    },
+    "anydesk-global-settings": {
+      "path": "/usr/bin/anydesk-global-settings",
+      "size": 54,
+      "type": "shell",
+      "issues": []
+    },
+    "anytopnm": {
+      "path": "/usr/bin/anytopnm",
+      "size": 12556,
+      "type": "shell",
+      "issues": [
+        "backticks (10)"
+      ]
+    },
+    "apg": {
+      "path": "/usr/bin/apg",
+      "size": 274,
+      "type": "shell",
+      "issues": []
+    },
+    "apgbfm": {
+      "path": "/usr/bin/apgbfm",
+      "size": 26784,
+      "type": "binary",
+      "file_type": "/usr/bin/apgbfm: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=f3c015025af941662344fa1fbc0c8e6b710a49e9, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "apktool": {
+      "path": "/usr/bin/apktool",
+      "size": 2355,
+      "type": "shell",
+      "issues": [
+        "backticks (16)"
+      ]
+    },
+    "aplay": {
+      "path": "/usr/bin/aplay",
+      "size": 84400,
+      "type": "binary",
+      "file_type": "/usr/bin/aplay: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=79cdf07ae7d873fb62640fbb7a5fa5c5a41ac88c, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aplaymidi": {
+      "path": "/usr/bin/aplaymidi",
+      "size": 27016,
+      "type": "binary",
+      "file_type": "/usr/bin/aplaymidi: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=0bee2a272494c8efc0f008238f571b4820097287, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "apport-bug": {
+      "path": "/usr/bin/apport-bug",
+      "size": 2322,
+      "type": "shell",
+      "issues": [
+        "backticks (4)"
+      ]
+    },
+    "apport-cli": {
+      "path": "/usr/bin/apport-cli",
+      "size": 13625,
+      "type": "python",
+      "issues": [
+        "percent_format",
+        "open_without_with"
+      ]
+    },
+    "apport-unpack": {
+      "path": "/usr/bin/apport-unpack",
+      "size": 3790,
+      "type": "python",
+      "issues": [
+        "percent_format"
+      ]
+    },
+    "appres": {
+      "path": "/usr/bin/appres",
+      "size": 14648,
+      "type": "binary",
+      "file_type": "/usr/bin/appres: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=8a994f3fd13aecccae6caefd290a7311f94274ec, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "appserver": {
+      "path": "/usr/bin/appserver",
+      "size": 63872,
+      "type": "binary",
+      "file_type": "/usr/bin/appserver: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=8f60f492c9db455ec0b8fcfb25f63718114cd95e, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "appstreamcli": {
+      "path": "/usr/bin/appstreamcli",
+      "size": 141544,
+      "type": "binary",
+      "file_type": "/usr/bin/appstreamcli: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=ba916ed6aadf4bbe0ab6e5f12e9b7d064726f3ed, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "apt": {
+      "path": "/usr/bin/apt",
+      "size": 18824,
+      "type": "binary",
+      "file_type": "/usr/bin/apt: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=519a513351361aee81498e80a62ebd63bdcda4c0, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "apt-cache": {
+      "path": "/usr/bin/apt-cache",
+      "size": 88544,
+      "type": "binary",
+      "file_type": "/usr/bin/apt-cache: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=42a27a425a840cdf06cea50d8b6d12d905bb5c20, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "apt-cdrom": {
+      "path": "/usr/bin/apt-cdrom",
+      "size": 27104,
+      "type": "binary",
+      "file_type": "/usr/bin/apt-cdrom: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=e69a2a59571f9f2be9841de8fac71cb00412e71b, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "apt-config": {
+      "path": "/usr/bin/apt-config",
+      "size": 31120,
+      "type": "binary",
+      "file_type": "/usr/bin/apt-config: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=241510834cf985a73edc233de36b8984c8ef5c3d, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "apt-extracttemplates": {
+      "path": "/usr/bin/apt-extracttemplates",
+      "size": 23008,
+      "type": "binary",
+      "file_type": "/usr/bin/apt-extracttemplates: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=70adc2d0905ed798e59ad95224907bc7eefe08bf, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "apt-ftparchive": {
+      "path": "/usr/bin/apt-ftparchive",
+      "size": 227816,
+      "type": "binary",
+      "file_type": "/usr/bin/apt-ftparchive: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=b188a2afa6338073911916d792222aa6c9fcc1ec, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "apt-get": {
+      "path": "/usr/bin/apt-get",
+      "size": 51680,
+      "type": "binary",
+      "file_type": "/usr/bin/apt-get: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=1cbe572b08fe7b98468f4d8114e569ae14e80534, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "apt-key": {
+      "path": "/usr/bin/apt-key",
+      "size": 28664,
+      "type": "shell",
+      "issues": []
+    },
+    "apt-mark": {
+      "path": "/usr/bin/apt-mark",
+      "size": 55776,
+      "type": "binary",
+      "file_type": "/usr/bin/apt-mark: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=2d4e104469392519936ed9651ce3106746507207, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "apt-sortpkgs": {
+      "path": "/usr/bin/apt-sortpkgs",
+      "size": 51608,
+      "type": "binary",
+      "file_type": "/usr/bin/apt-sortpkgs: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=c5a9f5fb0731ca0d8452d6733f4d4615f8634fb6, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "aptdcon": {
+      "path": "/usr/bin/aptdcon",
+      "size": 1039,
+      "type": "python",
+      "issues": []
+    },
+    "arch": {
+      "path": "/usr/bin/arch",
+      "size": 35336,
+      "type": "binary",
+      "file_type": "/usr/bin/arch: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=ae8c5068c00fa6551ffd0027b269ee067a838836, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arecordmidi": {
+      "path": "/usr/bin/arecordmidi",
+      "size": 31120,
+      "type": "binary",
+      "file_type": "/usr/bin/arecordmidi: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=637926bdee7236c4c781e93ad9b113908f3b6a52, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arj": {
+      "path": "/usr/bin/arj",
+      "size": 373811,
+      "type": "binary",
+      "file_type": "/usr/bin/arj: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=38bc373d6ba70780fb72885de1dc79b5246722de, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arj-register": {
+      "path": "/usr/bin/arj-register",
+      "size": 15368,
+      "type": "binary",
+      "file_type": "/usr/bin/arj-register: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=1323aea0445a8467dca6191428e7e070ad70993d, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arjdisp": {
+      "path": "/usr/bin/arjdisp",
+      "size": 15600,
+      "type": "binary",
+      "file_type": "/usr/bin/arjdisp: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=1138551f3a8375a41a68abeb3f51cb03659130df, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-addr2line": {
+      "path": "/usr/bin/arm-linux-gnueabi-addr2line",
+      "size": 35616,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-addr2line: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=899f896cdf7f3b2c257c60b5c6320c90ce2097e6, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-ar": {
+      "path": "/usr/bin/arm-linux-gnueabi-ar",
+      "size": 72184,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-ar: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=ab79a421f68b1ee3e785efaf84cc89ab66bb0486, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-as": {
+      "path": "/usr/bin/arm-linux-gnueabi-as",
+      "size": 1138056,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-as: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=00707d672de9088a91b731408cfbf17a587f62b1, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-c++filt": {
+      "path": "/usr/bin/arm-linux-gnueabi-c++filt",
+      "size": 35088,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-c++filt: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=65ad8112a6257b8adce4c7a1faa661384c8c554a, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-cpp-13": {
+      "path": "/usr/bin/arm-linux-gnueabi-cpp-13",
+      "size": 1887688,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-cpp-13: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=f65694f7d54b0631ea9a5f6e289c2dc69ec6ed85, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-dwp": {
+      "path": "/usr/bin/arm-linux-gnueabi-dwp",
+      "size": 3771808,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-dwp: ELF 64-bit LSB pie executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=306e610425b4950dcf834d6158d5e8a543b045e1, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-elfedit": {
+      "path": "/usr/bin/arm-linux-gnueabi-elfedit",
+      "size": 43760,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-elfedit: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=a09f401afdfb9d99dc75641693fc5f3c9e6f3a7c, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-g++-13": {
+      "path": "/usr/bin/arm-linux-gnueabi-g++-13",
+      "size": 1891784,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-g++-13: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=1a1592beba20e485e58a9f5a7a7986a444e24bb7, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-gcc-13": {
+      "path": "/usr/bin/arm-linux-gnueabi-gcc-13",
+      "size": 1887688,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-gcc-13: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=1a9de249f2941cacd71fe498ceaca1c5e959c0b5, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-gcc-ar-13": {
+      "path": "/usr/bin/arm-linux-gnueabi-gcc-ar-13",
+      "size": 35536,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-gcc-ar-13: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=2fcf71917b1c67373a9a9de7c15c465683f4018b, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-gcc-nm-13": {
+      "path": "/usr/bin/arm-linux-gnueabi-gcc-nm-13",
+      "size": 35536,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-gcc-nm-13: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=d9f94b022cb83d954c9cae17db974f178de909e6, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-gcc-ranlib-13": {
+      "path": "/usr/bin/arm-linux-gnueabi-gcc-ranlib-13",
+      "size": 35536,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-gcc-ranlib-13: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=6a1a4931e508b678b18db3df34b5d696292812de, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-gcov-13": {
+      "path": "/usr/bin/arm-linux-gnueabi-gcov-13",
+      "size": 1122760,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-gcov-13: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=f262818582390390e417f4e330332096e5040924, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-gcov-dump-13": {
+      "path": "/usr/bin/arm-linux-gnueabi-gcov-dump-13",
+      "size": 1032584,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-gcov-dump-13: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=e3ed64757a2943c56f36cce27dab0e0089d530a9, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-gcov-tool-13": {
+      "path": "/usr/bin/arm-linux-gnueabi-gcov-tool-13",
+      "size": 987520,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-gcov-tool-13: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=71be5b1c46540cc94e4b146c3d5f1a19491d8895, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-gprof": {
+      "path": "/usr/bin/arm-linux-gnueabi-gprof",
+      "size": 110440,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-gprof: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=714cea1efba55fe90278a9f0e3305f53eeb8b6fe, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-ld.bfd": {
+      "path": "/usr/bin/arm-linux-gnueabi-ld.bfd",
+      "size": 814848,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-ld.bfd: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=aafd097eb47c5d2e851fa4184ec43a1faed3bdcb, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-ld.gold": {
+      "path": "/usr/bin/arm-linux-gnueabi-ld.gold",
+      "size": 6349280,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-ld.gold: ELF 64-bit LSB pie executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=d05267fd4f630d886b0ca9b56f3dabc224d30f45, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-lto-dump-13": {
+      "path": "/usr/bin/arm-linux-gnueabi-lto-dump-13",
+      "size": 26500880,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-lto-dump-13: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=0f7bd3f889dbf6fd5a74252cbfe800372c10775e, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-nm": {
+      "path": "/usr/bin/arm-linux-gnueabi-nm",
+      "size": 60904,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-nm: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=d6784384fad4fa1a8c5c8df7d3098d95e43771ef, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-objcopy": {
+      "path": "/usr/bin/arm-linux-gnueabi-objcopy",
+      "size": 195184,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-objcopy: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=6d9a545782878d7ef1111cd78c58443fb801744e, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-objdump": {
+      "path": "/usr/bin/arm-linux-gnueabi-objdump",
+      "size": 460272,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-objdump: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=c00a9fc891e64b04dca7e872378bf469493d24ec, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-ranlib": {
+      "path": "/usr/bin/arm-linux-gnueabi-ranlib",
+      "size": 72216,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-ranlib: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=93a805d8422fd0d3a826e83302f0040818eef853, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-readelf": {
+      "path": "/usr/bin/arm-linux-gnueabi-readelf",
+      "size": 838400,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-readelf: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=da4b0635a640eff7b3f157f988e1c844f1d48a9c, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-size": {
+      "path": "/usr/bin/arm-linux-gnueabi-size",
+      "size": 35280,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-size: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=3dca9d6b08e6c3250d608ec34b0227ab2ea60ed7, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-strings": {
+      "path": "/usr/bin/arm-linux-gnueabi-strings",
+      "size": 39616,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-strings: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=bdbfc89b61bbaeddc134c71344877fe9d2d1969b, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-linux-gnueabi-strip": {
+      "path": "/usr/bin/arm-linux-gnueabi-strip",
+      "size": 195192,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-linux-gnueabi-strip: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=415603b2d9f449e0914b3fcee69d84f866ec8842, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-none-eabi-addr2line": {
+      "path": "/usr/bin/arm-none-eabi-addr2line",
+      "size": 1058384,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-none-eabi-addr2line: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=93b2bbba018e363eb03b3678991d4fc97b61fd24, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-none-eabi-ar": {
+      "path": "/usr/bin/arm-none-eabi-ar",
+      "size": 1090936,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-none-eabi-ar: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=69da6657c7ee8b62c794371d3fdd3fbc06ae943b, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-none-eabi-as": {
+      "path": "/usr/bin/arm-none-eabi-as",
+      "size": 2128064,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-none-eabi-as: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=cbd7afda03f59b205c2e6e7968ccdb88815896a7, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-none-eabi-c++": {
+      "path": "/usr/bin/arm-none-eabi-c++",
+      "size": 1284952,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-none-eabi-c++: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=7c201ed9d72a65d22a4a3cecde22f6713384c103, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-none-eabi-c++filt": {
+      "path": "/usr/bin/arm-none-eabi-c++filt",
+      "size": 1057872,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-none-eabi-c++filt: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=696b4f86cd9d01b779145777998cb24340c151a3, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-none-eabi-cpp": {
+      "path": "/usr/bin/arm-none-eabi-cpp",
+      "size": 1280856,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-none-eabi-cpp: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=072480fd7d7f6159057555d89803ee0e9e6296a2, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-none-eabi-elfedit": {
+      "path": "/usr/bin/arm-none-eabi-elfedit",
+      "size": 43720,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-none-eabi-elfedit: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=9d30860081174fc17c4ad0ada6b745598d77214b, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-none-eabi-g++": {
+      "path": "/usr/bin/arm-none-eabi-g++",
+      "size": 1284952,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-none-eabi-g++: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=7c201ed9d72a65d22a4a3cecde22f6713384c103, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-none-eabi-gcc": {
+      "path": "/usr/bin/arm-none-eabi-gcc",
+      "size": 1280856,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-none-eabi-gcc: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=e5eeebf0334325d502dbb8009ef03ede428a7f23, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-none-eabi-gcc-13.2.1": {
+      "path": "/usr/bin/arm-none-eabi-gcc-13.2.1",
+      "size": 1280856,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-none-eabi-gcc-13.2.1: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=e5eeebf0334325d502dbb8009ef03ede428a7f23, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-none-eabi-gcc-ar": {
+      "path": "/usr/bin/arm-none-eabi-gcc-ar",
+      "size": 27152,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-none-eabi-gcc-ar: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=13806f0c9c6be9c5396e4e8584c438ba5dbe4ea6, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-none-eabi-gcc-nm": {
+      "path": "/usr/bin/arm-none-eabi-gcc-nm",
+      "size": 27152,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-none-eabi-gcc-nm: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=6e78f179075449fc3c455052db40fabdc547a4e6, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-none-eabi-gcc-ranlib": {
+      "path": "/usr/bin/arm-none-eabi-gcc-ranlib",
+      "size": 27152,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-none-eabi-gcc-ranlib: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=d09e4c2aca340669e3693c9015187c7785167b16, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-none-eabi-gcov": {
+      "path": "/usr/bin/arm-none-eabi-gcov",
+      "size": 503800,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-none-eabi-gcov: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=103702f651233c2dfb72ff2ba3b7d6129fe4efbd, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-none-eabi-gcov-dump": {
+      "path": "/usr/bin/arm-none-eabi-gcov-dump",
+      "size": 409536,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-none-eabi-gcov-dump: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=b95618abf6a3ffae9520b7ee97da7baba44e247a, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-none-eabi-gcov-tool": {
+      "path": "/usr/bin/arm-none-eabi-gcov-tool",
+      "size": 364512,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-none-eabi-gcov-tool: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=78fb7b5a438522fe4a1ee34380b56851a621dd6d, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-none-eabi-gprof": {
+      "path": "/usr/bin/arm-none-eabi-gprof",
+      "size": 1125008,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-none-eabi-gprof: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=c8df4850b420c7bee19e39ce6b9af66b2595dbd0, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    },
+    "arm-none-eabi-ld": {
+      "path": "/usr/bin/arm-none-eabi-ld",
+      "size": 1747136,
+      "type": "binary",
+      "file_type": "/usr/bin/arm-none-eabi-ld: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=305e2e4cfa96f747f8922dbbe500c64f9534f353, for GNU/Linux 3.2.0, stripped",
+      "has_symbols": true
+    }
+  },
+  "summary": {
+    "total": 152,
+    "by_type": {
+      "other": 5,
+      "binary": 131,
+      "shell": 10,
+      "python": 6
+    },
+    "simd_available": true,
+    "total_python_issues": 7,
+    "total_shell_issues": 5
+  }
+}
